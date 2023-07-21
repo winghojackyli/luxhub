@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { userRequest } from "../requestMethods";
 import styled from "styled-components";
-import { clearCart } from "../redux/cartRedux";
 
 const Container = styled.div`
   height: 100vh;
@@ -40,7 +39,6 @@ const Success = () => {
           address: data.billing_details.address,
         });
         setOrderId(res.data._id);
-        dispatch(clearCart());
       } catch (err) {}
     };
     data && createOrder();

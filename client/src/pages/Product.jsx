@@ -7,7 +7,7 @@ import { Add, Remove } from "@material-ui/icons";
 import { mobile } from "../responsive";
 import { useLocation } from "react-router-dom";
 import { publicRequest } from "../requestMethods";
-import { addProduct } from "../redux/cartRedux";
+import { addProduct } from "../redux/wishlistRedux";
 import { useDispatch } from "react-redux";
 
 const Container = styled.div``;

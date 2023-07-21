@@ -1,8 +1,8 @@
 import { Badge } from "@material-ui/core";
 import {
+  FavoriteBorder,
   LanguageOutlined,
   Search,
-  ShoppingCartOutlined,
 } from "@material-ui/icons";
 import React from "react";
 import styled from "styled-components";
@@ -121,14 +121,17 @@ const Navbar = ({ user }) => {
               </Link>
             </>
           )}
-          <Link to="/cart" style={{ color: "inherit", textDecoration: "none" }}>
+          <Link
+            to="/checkout"
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
             <MenuItem>
               <Badge
                 badgeContent={quantity}
                 color="primary"
                 overlap="rectangular"
               >
-                <ShoppingCartOutlined />
+                <FavoriteBorder />
               </Badge>
             </MenuItem>
           </Link>

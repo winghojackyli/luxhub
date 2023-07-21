@@ -1,18 +1,19 @@
 export const sliderItems = [
   {
     id: 1,
-    img: "https://i.ibb.co/DCxSdN8/summer.png",
-    title: "SUMMER SALE",
-    desc: "Summer Sale Up to 50% Off",
-    bg: "f5fafd",
-  },
-  {
-    id: 2,
     img: "https://i.ibb.co/D40LVZn/tote.png",
     title: "MARC JACOBS",
     desc: "Marc Jacobs Tote Bags for Summer",
     bg: "dbdad6",
   },
+  {
+    id: 2,
+    img: "https://i.ibb.co/DCxSdN8/summer.png",
+    title: "SUMMER",
+    desc: "Show Off Your Kicks In Summer Time",
+    bg: "f5fafd",
+  },
+
   {
     id: 3,
     img: "https://i.ibb.co/WcLmrs8/LV.png",
