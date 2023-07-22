@@ -43,7 +43,7 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
-//GET PRODUCT
+//GET PRODUCT BY ID
 router.get("/find/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -53,7 +53,7 @@ router.get("/find/:id", async (req, res) => {
   }
 });
 
-//GET ALL PRODUCT
+//GET ALL PRODUCT (include filtering function)
 router.get("/", async (req, res) => {
   const qNew = req.query.new;
   const qCategory = req.query.category;
