@@ -1,9 +1,4 @@
-import { Badge } from "@material-ui/core";
-import {
-  FavoriteBorder,
-  LanguageOutlined,
-  Search,
-} from "@material-ui/icons";
+import { LanguageOutlined, Search } from "@material-ui/icons";
 import React from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
@@ -101,6 +96,12 @@ const Navbar = ({ user }) => {
           </Center>
         </Link>
         <Right>
+          <Link
+            to="/products"
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            <MenuItem>BROWSE</MenuItem>
+          </Link>
           {user ? (
             <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
@@ -121,20 +122,6 @@ const Navbar = ({ user }) => {
               </Link>
             </>
           )}
-          <Link
-            to="/checkout"
-            style={{ color: "inherit", textDecoration: "none" }}
-          >
-            <MenuItem>
-              <Badge
-                badgeContent={quantity}
-                color="primary"
-                overlap="rectangular"
-              >
-                <FavoriteBorder />
-              </Badge>
-            </MenuItem>
-          </Link>
         </Right>
       </Wrapper>
     </Container>
