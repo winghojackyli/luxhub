@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import Announcement from "../components/Announcement";
 import { mobile } from "../responsive";
 import { useLocation, useNavigate } from "react-router-dom";
-import { publicRequest } from "../requestMethods";
+import { publicRequest, userRequest } from "../requestMethods";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -84,6 +84,7 @@ const Product = () => {
   const id = location.pathname.split("/")[2];
   const [product, setProduct] = useState({});
   const [size, setSize] = useState("");
+  const [price, setPrice] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -96,6 +97,20 @@ const Product = () => {
     getProduct();
   }, [id]);
 
+  useEffect(() => {
+    const getBid = async () => {
+      if (size) {
+        try {
+          const res = await publicRequest.get(
+            "/bids/highestbid/" + id + "/" + size
+          );
+          res.data ? setPrice(res.data.price) : setPrice("No Bid");
+        } catch (err) {}
+      }
+    };
+    getBid();
+  }, [id, size]);
+
   const handleClick = (action) => {
     if (action === "buy") {
       navigate(`/checkout/${id}?size=${size}`);
@@ -103,6 +118,8 @@ const Product = () => {
       navigate(`/sell/${id}?size=${size}`);
     }
   };
+
+  console.log(price);
 
   return (
     <Container>
@@ -114,11 +131,17 @@ const Product = () => {
         <InfoContainer>
           <Title>{product.title}</Title>
           <Description>{product.desc}</Description>
-          <Price>$ {product.price}</Price>
+          {price ? (
+            <Price>{"Highest Bid: $ " + price}</Price>
+          ) : (
+            <Price>Select a size</Price>
+          )}
+
           <FilterContainer>
             <Filter>
               <FilterTitle>Size</FilterTitle>
               <FilterSize onChange={(e) => setSize(e.target.value)}>
+                <FilterSizeOption disabled selected></FilterSizeOption>
                 {product.size?.map((s) => (
                   <FilterSizeOption key={s}>{s}</FilterSizeOption>
                 ))}
@@ -126,8 +149,12 @@ const Product = () => {
             </Filter>
           </FilterContainer>
           <AddContainer>
-            <Button onClick={()=>handleClick("buy")}>BUY OR BID</Button>
-            <Button onClick={()=>handleClick("sell")}>SELL OR ASK</Button>
+            <Button onClick={() => handleClick("buy")} disabled={!size}>
+              BUY OR BID
+            </Button>
+            <Button onClick={() => handleClick("sell")} disabled={!size}>
+              SELL OR ASK
+            </Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>

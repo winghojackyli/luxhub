@@ -15,14 +15,14 @@ import { useSelector } from "react-redux";
 import Navbar from "./components/Navbar";
 
 const App = () => {
-  const user = useSelector((state) => state.user?.currentUser);
+  const user = useSelector((state) => state.currentUser);
   return (
     <Router>
       <Navbar user={user} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<ProductList />} />
-        <Route path="/products/:category" element={<ProductList />} />
+        <Route path="/products/:brand" element={<ProductList />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/checkout/:id" element={<Checkout />} />
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
