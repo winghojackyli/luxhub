@@ -22,42 +22,42 @@ export const sliderItems = [
     bg: "c6c6c4",
   },
 ];
-export const categories = [
+export const brands = [
   {
     id: 1,
     img: "https://images.ctfassets.net/gl3ev2s7u7gx/3Cc2gyRwCUrdYqYg0IVEWk/f8e2eb48047ccf6fc940200cd34ec901/Nike_Air_Max_Day-2.jpeg?w=2000",
     title: "Nike",
-    category: "nike",
+    brand: "nike",
   },
   {
     id: 2,
     img: "https://assets.adidas.com/images/w_600,f_auto,q_auto/5dd810c0287244c1ba4eaf310077018b_9366/Samba_Juventus_Shoes_Black_HQ7034_HM1.jpg",
     title: "Adidas",
-    category: "adidas",
+    brand: "adidas",
   },
   {
     id: 3,
     img: "https://media.newyorker.com/photos/5930549810ddbb45aa2252a9/master/w_2000,h_1333,c_limit/Backman-Supreme-Copies.jpg",
     title: "Supreme",
-    category: "supreme",
+    brand: "supreme",
   },
   {
     id: 4,
-    title: "Louis Vuitton",
-    img: "https://www.louisvuitton.com/images/is/image/lv/1/PP_VP_L/louis-vuitton--BC_221210_LV_EDITORIALISATION_DECEMBRE_15_102_V02_WOME_SLG_BILLIE_ACHILLEOS_VISUAL_LVCOM_1600x2000_DII.jpg",
-    category: "lv",
+    title: "Fragment",
+    img: "https://cdn.shopify.com/s/files/1/0260/3241/files/DNEIMBY-1.jpg?10434272571974596006",
+    brand: "fragment",
   },
   {
     id: 5,
     img: "https://app.dropinblog.com/uploaded/blogs/34240971/files/Air-Jordan-1-Lost-and-Found-DZ5485-612-Release-Date-On-Feet-2.jpg",
     title: "Jordan",
-    category: "jordan",
+    brand: "jordan",
   },
   {
     id: 6,
     img: "https://hips.hearstapps.com/hmg-prod/images/gettyimages-631497628-1658852446.jpg",
     title: "Yeezy",
-    category: "yeezy",
+    brand: "yeezy",
   },
 ];
 export const popularProducts = [

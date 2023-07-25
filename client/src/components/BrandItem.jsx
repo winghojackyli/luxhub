@@ -26,13 +26,10 @@ const Info = styled.div`
   align-items: center;
   justify-content: center;
 `;
-const Title = styled.h1`
-  color: white;
-  margin-bottom: 20px;
-`;
 const Button = styled.button`
   border: none;
-  padding: 10px;
+  border-radius: 5px;
+  padding: 12px;
   background-color: white;
   color: grey;
   font-weight: 600;
@@ -42,18 +39,17 @@ const Button = styled.button`
   }
 `;
 
-const CategoryItem = ({ item }) => {
+const BrandItem = ({ item }) => {
   return (
     <Container>
       <Image src={item.img} />
       <Info>
-        <Title>{item.title}</Title>
-        <Link to={`/products/${item.category}`}>
-          <Button>SHOP NOW</Button>
+        <Link to={`/products/${item.brand}`}>
+          <Button>{item.title}</Button>
         </Link>
       </Info>
     </Container>
   );
 };
 
-export default CategoryItem;
+export default BrandItem;

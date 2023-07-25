@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import Navbar from "./components/Navbar";
 
 const App = () => {
-  const user = useSelector((state) => state.user.currentUser);
+  const user = useSelector((state) => state.user?.currentUser);
   return (
     <Router>
       <Navbar user={user} />

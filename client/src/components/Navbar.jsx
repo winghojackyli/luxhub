@@ -2,7 +2,7 @@ import { LanguageOutlined, Search } from "@material-ui/icons";
 import React from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { logout } from "../redux/apiCalls";
 
@@ -73,7 +73,6 @@ const MenuItem = styled.div`
 `;
 
 const Navbar = ({ user }) => {
-  const quantity = useSelector((state) => state.cart.quantity);
   const dispatch = useDispatch();
   const handleLogout = () => {
     logout(dispatch);

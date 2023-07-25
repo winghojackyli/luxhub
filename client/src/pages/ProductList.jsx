@@ -8,9 +8,7 @@ import { mobile } from "../responsive";
 import { useLocation } from "react-router-dom";
 
 const Container = styled.div``;
-const Title = styled.h1`
-  margin: 20px;
-`;
+
 const FilterContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -34,34 +32,46 @@ const Option = styled.option``;
 
 const ProductList = () => {
   const location = useLocation();
-  const category = location.pathname.split("/")[2];
-  const [filters, setFilters] = useState({});
+  const branding = location.pathname.split("/")[2];
+  const [filters, setFilters] = useState(branding ? { brand: branding } : {});
   const [sort, setSort] = useState("newest");
 
   const handleFilters = (e) => {
-    const value = e.target.value;
-
-    setFilters({
-      ...filters,
-      [e.target.name]: value,
-    });
+    if (e.target.value !== "all") {
+      const value = e.target.value;
+      setFilters({
+        ...filters,
+        [e.target.name]: value,
+      });
+    } else {
+      if (e.target.name === "brand") {
+        const { brand, ...rest } = filters;
+        setFilters(rest);
+      } else {
+        const { categories, ...rest } = filters;
+        setFilters(rest);
+      }
+    }
+    console.log(filters);
   };
 
   return (
     <Container>
       <Announcement />
-      <Title>{category}</Title>
       <FilterContainer>
         <Filter>
           <FilterText>Filter Products:</FilterText>
           <Select name="categories" onChange={handleFilters}>
             <Option disabled>Category</Option>
+            <Option selected>all</Option>
             <Option>top</Option>
             <Option>bottom</Option>
             <Option>shoes</Option>
+            <Option>accessories</Option>
           </Select>
-          <Select name="brand" onChange={handleFilters}>
-            <Option disabled>Size</Option>
+          <Select name="brand" onChange={handleFilters} value={branding}>
+            <Option disabled>Brand</Option>
+            <Option selected>all</Option>
             <Option>adidas</Option>
             <Option>yeezy</Option>
             <Option>nike</Option>
@@ -91,7 +101,7 @@ const ProductList = () => {
           </Select>
         </Filter>
       </FilterContainer>
-      <Products category={category} filters={filters} sort={sort} />
+      <Products filters={filters} sort={sort} />
       <Newsletter />
       <Footer />
     </Container>

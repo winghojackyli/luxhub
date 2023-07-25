@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { categories } from "../data";
-import CategoryItem from "./CategoryItem";
+import { brands } from "../data";
+import BrandItem from "./BrandItem";
 import { mobile } from "../responsive";
 
 const Container = styled.div`
@@ -11,14 +11,14 @@ const Container = styled.div`
   ${mobile({ padding: "0px", flexDirection: "column" })}
 `;
 
-const Categories = () => {
+const Brands = () => {
   return (
     <Container>
-      {categories.map((item) => (
-        <CategoryItem item={item} key={item.id} />
+      {brands.map((item) => (
+        <BrandItem item={item} key={item.id} />
       ))}
     </Container>
   );
 };
 
-export default Categories;
+export default Brands;

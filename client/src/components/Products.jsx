@@ -10,28 +10,22 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
-const Products = ({ category, filters, sort }) => {
+const Products = ({ filters, sort }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-
-  console.log(filters);
 
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await axios.get(
-          category
-            ? `http://localhost:5000/api/products?category=${category}`
-            : "http://localhost:5000/api/products"
-        );
+        const res = await axios.get("http://localhost:5000/api/products");
         setProducts(res.data);
       } catch (err) {}
     };
     getProducts();
-  }, [category]);
+  }, []);
 
   useEffect(() => {
-    filters &&
+    if (filters) {
       setFilteredProducts(
         products?.filter((item) =>
           Object.entries(filters).every(([key, value]) =>
@@ -39,6 +33,7 @@ const Products = ({ category, filters, sort }) => {
           )
         )
       );
+    }
   }, [products, filters]);
 
   useEffect(() => {
@@ -56,13 +51,10 @@ const Products = ({ category, filters, sort }) => {
       );
     }
   }, [sort]);
+
   return (
     <Container>
-      {category
-        ? filteredProducts?.map((item) => (
-            <ProductItem item={item} key={item.id} />
-          ))
-        : !sort
+      {!sort
         ? products
             .slice(0, 10)
             .map((item) => <ProductItem item={item} key={item.id} />)
