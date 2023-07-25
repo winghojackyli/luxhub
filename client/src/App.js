@@ -13,11 +13,13 @@ import {
 import Success from "./pages/Success";
 import { useSelector } from "react-redux";
 import Navbar from "./components/Navbar";
+import ScrollToTop from "./helpers/ScrollToTop";
 
 const App = () => {
   const user = useSelector((state) => state.user?.currentUser);
   return (
     <Router>
+      <ScrollToTop />
       <Navbar user={user} />
       <Routes>
         <Route path="/" element={<Home />} />
