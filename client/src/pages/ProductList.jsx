@@ -40,6 +40,7 @@ const ProductList = () => {
 
   const handleFilters = (e) => {
     const value = e.target.value;
+
     setFilters({
       ...filters,
       [e.target.name]: value,
@@ -53,23 +54,32 @@ const ProductList = () => {
       <FilterContainer>
         <Filter>
           <FilterText>Filter Products:</FilterText>
-          <Select name="color" onChange={handleFilters}>
-            <Option disabled>Color</Option>
-            <Option>white</Option>
-            <Option>black</Option>
-            <Option>red</Option>
-            <Option>blue</Option>
-            <Option>yellow</Option>
-            <Option>green</Option>
+          <Select name="categories" onChange={handleFilters}>
+            <Option disabled>Category</Option>
+            <Option>top</Option>
+            <Option>bottom</Option>
+            <Option>shoes</Option>
           </Select>
-          <Select name="size" onChange={handleFilters}>
+          <Select name="brand" onChange={handleFilters}>
             <Option disabled>Size</Option>
-            <Option>XS</Option>
-            <Option>S</Option>
-            <Option>M</Option>
-            <Option>L</Option>
-            <Option>XL</Option>
-            <Option>XXL</Option>
+            <Option>adidas</Option>
+            <Option>yeezy</Option>
+            <Option>nike</Option>
+            <Option>jordan</Option>
+            <Option>new balance</Option>
+            <Option>wtaps</Option>
+            <Option>asics</Option>
+            <Option>jjjjound</Option>
+            <Option>sacai</Option>
+            <Option>palm angels</Option>
+            <Option>gap</Option>
+            <Option>supreme</Option>
+            <Option>human made</Option>
+            <Option>kaws</Option>
+            <Option>moncler</Option>
+            <Option>fragment</Option>
+            <Option>stussy</Option>
+            <Option>levis</Option>
           </Select>
         </Filter>
         <Filter>
