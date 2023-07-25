@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import Announcement from "../components/Announcement";
 import { mobile } from "../responsive";
 import { useLocation, useNavigate } from "react-router-dom";
-import { publicRequest, userRequest } from "../requestMethods";
+import { publicRequest } from "../requestMethods";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -118,8 +118,6 @@ const Product = () => {
       navigate(`/sell/${id}?size=${size}`);
     }
   };
-
-  console.log(price);
 
   return (
     <Container>
