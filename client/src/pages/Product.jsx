@@ -105,7 +105,7 @@ const Product = () => {
           const res = await publicRequest.get(
             "/bids/highestbid/" + id + "/" + size
           );
-          res.data ? setBid(res.data.price) : setBid(" - ");
+          res.data ? setBid(res.data.price) : setBid("");
         } catch (err) {}
       }
     };
@@ -119,7 +119,7 @@ const Product = () => {
           const res = await publicRequest.get(
             "/asks/lowestask/" + id + "/" + size
           );
-          res.data ? setAsk(res.data.price) : setAsk(" - ");
+          res.data ? setAsk(res.data.price) : setAsk("");
         } catch (err) {}
       }
     };
@@ -144,30 +144,32 @@ const Product = () => {
         <InfoContainer>
           <Title>{product.title}</Title>
           <Description>{product.desc}</Description>
-          <PriceContainer>
-            {bid ? (
-              <>
-                <Price>{"Highest Bid: $ " + bid}</Price>
+          {size ? (
+            <>
+              <PriceContainer>
+                {bid ? (
+                  <Price>{"Highest Bid: $ " + bid}</Price>
+                ) : (
+                  <Price>No Bid</Price>
+                )}
                 <Button onClick={() => handleClick("sell")} disabled={!size}>
                   ASK or SELL FOR ${bid}
                 </Button>
-              </>
-            ) : (
-              <Price>Select a size</Price>
-            )}
-          </PriceContainer>
-          {size && (
-            <PriceContainer>
-              {ask ? (
-                <>
+              </PriceContainer>
+              <PriceContainer>
+                {ask ? (
                   <Price>{"Lowest Ask: $ " + ask}</Price>
-                  <Button onClick={() => handleClick("buy")} disabled={!size}>
-                    BID or BUY FOR ${ask}
-                  </Button>
-                </>
-              ) : (
-                <Price></Price>
-              )}
+                ) : (
+                  <Price>No Ask</Price>
+                )}
+                <Button onClick={() => handleClick("buy")} disabled={!size}>
+                  BID or BUY FOR ${ask}
+                </Button>
+              </PriceContainer>
+            </>
+          ) : (
+            <PriceContainer>
+              <Price>Select a size</Price>
             </PriceContainer>
           )}
           <FilterContainer>

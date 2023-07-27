@@ -14,6 +14,8 @@ import Success from "./pages/Success";
 import { useSelector } from "react-redux";
 import Navbar from "./components/Navbar";
 import ScrollToTop from "./helpers/ScrollToTop";
+import Sell from "./pages/Sell";
+import SuccessAsk from "./pages/SuccessAsk";
 
 const App = () => {
   const user = useSelector((state) => state.currentUser);
@@ -27,12 +29,14 @@ const App = () => {
         <Route path="/products/:brand" element={<ProductList />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/checkout/:id" element={<Checkout />} />
+        <Route path="/sell/:id" element={<Sell />} />
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
         <Route
           path="/register"
           element={user ? <Navigate to="/" /> : <Register />}
         />
         <Route path="/success" element={<Success />} />
+        <Route path="/successask" element={<SuccessAsk />} />
       </Routes>
     </Router>
   );

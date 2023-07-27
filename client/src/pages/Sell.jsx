@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Announcement from "../components/Announcement";
 import { mobile } from "../responsive";
-import StripeCheckout from "react-stripe-checkout";
 import { publicRequest, userRequest } from "../requestMethods";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-
-const KEY = process.env.REACT_APP_STRIPE;
+import { useSelector } from "react-redux";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -110,18 +108,18 @@ const Limit = styled.div`
   margin: 5px;
 `;
 
-const Checkout = () => {
+const Sell = () => {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const size = searchParams.get("size");
   const price = searchParams.get("price");
   const id = location.pathname.split("/")[2];
-  const [stripeToken, setStripeToken] = useState(null);
   const [product, setProduct] = useState({});
-  const [bid, setBid] = useState("");
-  const [highestBid, setHighestBid] = useState("");
-  const [mode, setMode] = useState("bid");
+  const [ask, setAsk] = useState("");
+  const [lowestAsk, setLowestAsk] = useState("");
+  const [mode, setMode] = useState("ask");
   const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.currentUser);
 
   useEffect(() => {
     const getProduct = async () => {
@@ -137,38 +135,34 @@ const Checkout = () => {
     setMode(mode);
   };
 
-  const onToken = (token) => {
-    setStripeToken(token);
-  };
-
   useEffect(() => {
-    const makeRequest = async () => {
-      try {
-        const res = await userRequest.post("/checkout/payment", {
-          tokenId: stripeToken.id,
-          amount: mode === "buy" ? price : bid,
-        });
-        navigate("/success", {
-          state: { stripeData: res.data, productId: id, size },
-        });
-      } catch (err) {}
-    };
-    stripeToken && makeRequest();
-  }, [stripeToken, navigate, price, id, size, bid, mode]);
-
-  useEffect(() => {
-    const getHighestBid = async () => {
+    const getLowestAsk = async () => {
       if (size) {
         try {
           const res = await publicRequest.get(
-            "/bids/highestbid/" + id + "/" + size
+            "/asks/lowestask/" + id + "/" + size
           );
-          res.data ? setHighestBid(res.data.price) : setHighestBid("");
+          res.data ? setLowestAsk(res.data.price) : setLowestAsk("");
         } catch (err) {}
       }
     };
-    getHighestBid();
+    getLowestAsk();
   }, [id, size]);
+
+  const handleClick = () => {
+    const makeRequest = async () => {
+      try {
+        const res = await userRequest.post("/asks", {
+          productId: id,
+          size,
+          price: mode === "sell" ? price : ask,
+          userId: currentUser._id,
+        });
+        navigate("/successask", { state: res.data });
+      } catch (err) {}
+    };
+    makeRequest();
+  };
 
   return (
     <Container>
@@ -197,64 +191,38 @@ const Checkout = () => {
           <Summary>
             <SummaryTitle>ORDER</SummaryTitle>
             <ButtonContainer>
-              <Button onClick={() => onChangeMode("bid")}>PLACE BID</Button>
+              <Button onClick={() => onChangeMode("ask")}>PLACE ASK</Button>
               <Button
-                onClick={() => onChangeMode("buy")}
+                onClick={() => onChangeMode("sell")}
                 disabled={price === ""}
               >
-                BUY NOW
+                SELL NOW
               </Button>
             </ButtonContainer>
 
-            {mode === "buy" ? (
+            {mode === "sell" ? (
               <>
                 <SummaryItem type="total">
                   <SummaryItemText>Total</SummaryItemText>
                   <SummaryItemPrice>$ {price}</SummaryItemPrice>
                 </SummaryItem>
-                <StripeCheckout
-                  name="LuxHub"
-                  image="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-                  billingAddress
-                  shippingAddress
-                  description={`Your total is ${price}`}
-                  amount={price * 100}
-                  token={onToken}
-                  stripeKey={KEY}
-                  locale="en"
-                >
-                  <CheckoutButton>CHECKOUT NOW</CheckoutButton>
-                </StripeCheckout>
+                <CheckoutButton onClick={handleClick}>SELL NOW</CheckoutButton>
               </>
             ) : (
               <BidWrapper>
-                {highestBid ? (
-                  <Limit>
-                    Enter ${highestBid} or more to get your Bid matched faster!
-                  </Limit>
+                {lowestAsk ? (
+                  <Limit>Enter ${lowestAsk} or earn more!</Limit>
                 ) : (
-                  <Limit>Place the first bid now!</Limit>
+                  <Limit>Place the first ask here!</Limit>
                 )}
                 <BidInput
-                  placeholder="Enter Bid"
+                  placeholder="Enter Ask"
                   type="number"
                   min="100"
-                  onChange={(e) => setBid(e.target.value)}
+                  onChange={(e) => setAsk(e.target.value)}
                 />
                 <Limit>A minimum bid value of $100 is required</Limit>
-                <StripeCheckout
-                  name="LuxHub"
-                  image="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-                  billingAddress
-                  shippingAddress
-                  description={`Tour total is ${bid}`}
-                  amount={bid * 100}
-                  token={onToken}
-                  stripeKey={KEY}
-                  locale="en"
-                >
-                  <CheckoutButton>PLACE BID</CheckoutButton>
-                </StripeCheckout>
+                <CheckoutButton onClick={handleClick}>PLACE ASK</CheckoutButton>
               </BidWrapper>
             )}
           </Summary>
@@ -264,4 +232,4 @@ const Checkout = () => {
   );
 };
 
-export default Checkout;
+export default Sell;

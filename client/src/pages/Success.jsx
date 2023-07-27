@@ -45,8 +45,8 @@ const Success = () => {
   return (
     <Container>
       {bidId
-        ? `Order has been created successfully. Your bid number is ${bidId}`
-        : `Successfull. Your order is being prepared...`}
+        ? `Bid has been created successfully. Your bid number is ${bidId}`
+        : `Your bid cannot be placed. Please try again. `}
       <Link to="/">
         <Button>Go to Homepage</Button>
       </Link>
