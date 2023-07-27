@@ -19,34 +19,33 @@ const Button = styled.button`
 `;
 
 const Success = () => {
-  const [orderId, setOrderId] = useState(null);
+  const [bidId, setBidId] = useState(null);
   const location = useLocation();
-  const data = location.state.stripeData;
-  const cart = location.state.cart;
-  const currentUser = useSelector((state) => state.user.currentUser);
+  const stripeData = location.state.stripeData;
+  const productId = location.state.productId;
+  const size = location.state.size;
+  const currentUser = useSelector((state) => state.currentUser);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const createOrder = async () => {
+    const createBid = async () => {
       try {
-        const res = await userRequest.post("/orders", {
+        const res = await userRequest.post("/bids", {
           userId: currentUser._id,
-          products: cart.products.map((item) => ({
-            productId: item._id,
-            quantity: item._quantity,
-          })),
-          amount: cart.total,
-          address: data.billing_details.address,
+          productId,
+          size,
+          price: stripeData.amount,
+          address: stripeData.billing_details.address,
         });
-        setOrderId(res.data._id);
+        setBidId(res.data._id);
       } catch (err) {}
     };
-    data && createOrder();
-  }, [cart, data, currentUser, dispatch]);
+    stripeData && createBid();
+  }, [stripeData, currentUser, dispatch, productId, size]);
   return (
     <Container>
-      {orderId
-        ? `Order has been created successfully. Your order number is ${orderId}`
+      {bidId
+        ? `Order has been created successfully. Your bid number is ${bidId}`
         : `Successfull. Your order is being prepared...`}
       <Link to="/">
         <Button>Go to Homepage</Button>

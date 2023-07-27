@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Announcement from "../components/Announcement";
 import { mobile } from "../responsive";
-import { useSelector } from "react-redux";
 import StripeCheckout from "react-stripe-checkout";
 import { publicRequest, userRequest } from "../requestMethods";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -118,17 +117,19 @@ const BidInput = styled.input`
 const Limit = styled.div`
   font-size: 15px;
   font-weight: 200;
-  margin: 10px;
+  margin: 5px;
 `;
 
 const Checkout = () => {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const size = searchParams.get("size");
+  const price = searchParams.get("price");
   const id = location.pathname.split("/")[2];
-  const checkout = useSelector((state) => state.checkout);
   const [stripeToken, setStripeToken] = useState(null);
   const [product, setProduct] = useState({});
+  const [bid, setBid] = useState("");
+  const [highestBid, setHighestBid] = useState("");
   const [mode, setMode] = useState("buy");
   const navigate = useNavigate();
 
@@ -155,14 +156,29 @@ const Checkout = () => {
       try {
         const res = await userRequest.post("/checkout/payment", {
           tokenId: stripeToken.id,
+          amount: mode === "buy" ? price : bid,
         });
         navigate("/success", {
-          state: { stripeData: res.data, checkout },
+          state: { stripeData: res.data, productId: id, size },
         });
       } catch (err) {}
     };
     stripeToken && makeRequest();
-  }, [stripeToken, navigate, checkout]);
+  }, [stripeToken, navigate, price, id, size, bid, mode]);
+
+  useEffect(() => {
+    const getHighestBid = async () => {
+      if (size) {
+        try {
+          const res = await publicRequest.get(
+            "/bids/highestbid/" + id + "/" + size
+          );
+          res.data ? setHighestBid(res.data.price) : setHighestBid(" - ");
+        } catch (err) {}
+      }
+    };
+    getHighestBid();
+  }, [id, size]);
 
   return (
     <Container>
@@ -186,7 +202,7 @@ const Checkout = () => {
                 </Details>
               </ProductDetail>
               <PriceDetail>
-                <ProductPrice>$ price</ProductPrice>
+                <ProductPrice>$ {price}</ProductPrice>
               </PriceDetail>
             </Product>
             <Hr />
@@ -202,15 +218,15 @@ const Checkout = () => {
               <>
                 <SummaryItem type="total">
                   <SummaryItemText>Total</SummaryItemText>
-                  <SummaryItemPrice>$ total</SummaryItemPrice>
+                  <SummaryItemPrice>$ {price}</SummaryItemPrice>
                 </SummaryItem>
                 <StripeCheckout
                   name="LuxHub"
                   image="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
                   billingAddress
                   shippingAddress
-                  description={`Tour total is $total`}
-                  amount={100 * 100}
+                  description={`Your total is ${price}`}
+                  amount={price * 100}
                   token={onToken}
                   stripeKey={KEY}
                   locale="en"
@@ -220,15 +236,23 @@ const Checkout = () => {
               </>
             ) : (
               <BidWrapper>
-                <BidInput placeholder="Enter Bid" type="number" min="100" />
+                <Limit>
+                  Enter ${highestBid} or more to get your Bid matched faster!
+                </Limit>
+                <BidInput
+                  placeholder="Enter Bid"
+                  type="number"
+                  min="100"
+                  onChange={(e) => setBid(e.target.value)}
+                />
                 <Limit>A minimum bid value of $100 is required</Limit>
                 <StripeCheckout
                   name="LuxHub"
                   image="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
                   billingAddress
                   shippingAddress
-                  description={`Tour total is $total`}
-                  amount={100 * 100}
+                  description={`Tour total is ${bid}`}
+                  amount={bid * 100}
                   token={onToken}
                   stripeKey={KEY}
                   locale="en"

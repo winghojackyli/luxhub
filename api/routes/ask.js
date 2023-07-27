@@ -37,4 +37,19 @@ router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
   }
 });
 
+//GET LOWEST ASK
+router.get("/lowestask/:productId/:size", async (req, res) => {
+  try {
+    const asks = await Ask.findOne({
+      productId: req.params.productId,
+      size: req.params.size,
+    })
+      .sort({ price: 1 })
+      .limit(1);
+    res.status(200).json(asks);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;

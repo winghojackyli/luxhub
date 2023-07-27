@@ -35,7 +35,7 @@ const Description = styled.p`
 `;
 const Price = styled.span`
   font-weight: 100;
-  font-size: 40px;
+  font-size: 35px;
 `;
 const FilterContainer = styled.div`
   width: 50%;
@@ -49,25 +49,25 @@ const Filter = styled.div`
   align-items: center;
 `;
 const FilterTitle = styled.span`
-  font-size: 20px;
+  font-size: 30px;
   font-weight: 200;
 `;
 
 const FilterSize = styled.select`
+  font-size: 20px;
   margin-left: 10px;
   padding: 5px;
 `;
 const FilterSizeOption = styled.option``;
 
-const AddContainer = styled.div`
-  width: 50%;
+const PriceContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   ${mobile({ width: "100%" })}
 `;
 const Button = styled.button`
-  width: 100%;
+  width: 30%;
   margin: 10px;
   padding: 15px;
   border: 2px solid teal;
@@ -84,7 +84,8 @@ const Product = () => {
   const id = location.pathname.split("/")[2];
   const [product, setProduct] = useState({});
   const [size, setSize] = useState("");
-  const [price, setPrice] = useState("");
+  const [bid, setBid] = useState("");
+  const [ask, setAsk] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -104,18 +105,32 @@ const Product = () => {
           const res = await publicRequest.get(
             "/bids/highestbid/" + id + "/" + size
           );
-          res.data ? setPrice(res.data.price) : setPrice("No Bid");
+          res.data ? setBid(res.data.price) : setBid(" - ");
         } catch (err) {}
       }
     };
     getBid();
   }, [id, size]);
 
+  useEffect(() => {
+    const getAsk = async () => {
+      if (size) {
+        try {
+          const res = await publicRequest.get(
+            "/asks/lowestask/" + id + "/" + size
+          );
+          res.data ? setAsk(res.data.price) : setAsk(" - ");
+        } catch (err) {}
+      }
+    };
+    getAsk();
+  }, [id, size]);
+
   const handleClick = (action) => {
     if (action === "buy") {
-      navigate(`/checkout/${id}?size=${size}`);
+      navigate(`/checkout/${id}?size=${size}&price=${ask}`);
     } else {
-      navigate(`/sell/${id}?size=${size}`);
+      navigate(`/sell/${id}?size=${size}&price=${bid}`);
     }
   };
 
@@ -129,12 +144,32 @@ const Product = () => {
         <InfoContainer>
           <Title>{product.title}</Title>
           <Description>{product.desc}</Description>
-          {price ? (
-            <Price>{"Highest Bid: $ " + price}</Price>
-          ) : (
-            <Price>Select a size</Price>
+          <PriceContainer>
+            {bid ? (
+              <>
+                <Price>{"Highest Bid: $ " + bid}</Price>
+                <Button onClick={() => handleClick("sell")} disabled={!size}>
+                  ASK or SELL FOR ${bid}
+                </Button>
+              </>
+            ) : (
+              <Price>Select a size</Price>
+            )}
+          </PriceContainer>
+          {size && (
+            <PriceContainer>
+              {ask ? (
+                <>
+                  <Price>{"Lowest Ask: $ " + ask}</Price>
+                  <Button onClick={() => handleClick("buy")} disabled={!size}>
+                    BID or BUY FOR ${ask}
+                  </Button>
+                </>
+              ) : (
+                <Price></Price>
+              )}
+            </PriceContainer>
           )}
-
           <FilterContainer>
             <Filter>
               <FilterTitle>Size</FilterTitle>
@@ -146,14 +181,6 @@ const Product = () => {
               </FilterSize>
             </Filter>
           </FilterContainer>
-          <AddContainer>
-            <Button onClick={() => handleClick("buy")} disabled={!size}>
-              BUY OR BID
-            </Button>
-            <Button onClick={() => handleClick("sell")} disabled={!size}>
-              SELL OR ASK
-            </Button>
-          </AddContainer>
         </InfoContainer>
       </Wrapper>
       <Newsletter />
