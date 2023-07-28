@@ -18,7 +18,7 @@ router.post("/", verifyToken, async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await Bid.findByIdAndDelete(req.params.id);
     res.status(200).json("Bid has been deleted.");

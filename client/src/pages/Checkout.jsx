@@ -5,6 +5,7 @@ import { mobile } from "../responsive";
 import StripeCheckout from "react-stripe-checkout";
 import { publicRequest, userRequest } from "../requestMethods";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const KEY = process.env.REACT_APP_STRIPE;
 
@@ -87,6 +88,9 @@ const CheckoutButton = styled.button`
   color: white;
   font-weight: 600;
   cursor: pointer;
+  &:disabled {
+    opacity: 0.5;
+  }
 `;
 const ButtonContainer = styled.div`
   display: flex;
@@ -119,8 +123,10 @@ const Checkout = () => {
   const [stripeToken, setStripeToken] = useState(null);
   const [product, setProduct] = useState({});
   const [bid, setBid] = useState("");
+  const [lowestAsk, setLowestAsk] = useState("");
   const [highestBid, setHighestBid] = useState("");
   const [mode, setMode] = useState("bid");
+  const currentUser = useSelector((state) => state.currentUser);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -144,17 +150,33 @@ const Checkout = () => {
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        const res = await userRequest.post("/checkout/payment", {
-          tokenId: stripeToken.id,
-          amount: mode === "buy" ? price : bid,
-        });
-        navigate("/success", {
-          state: { stripeData: res.data, productId: id, size },
-        });
+        if (lowestAsk && bid >= lowestAsk.price) {
+          const res = await userRequest.post("/orders", {
+            productId: id,
+            size,
+            price: lowestAsk.price,
+            seller: lowestAsk.userId,
+            buyer: currentUser._id,
+          });
+          await userRequest.delete("/bids/" + lowestAsk._id);
+          await userRequest.post("/checkout/payment", {
+            tokenId: stripeToken.id,
+            amount: lowestAsk.price,
+          });
+          navigate("/successorder", { state: res.data });
+        } else {
+          const res = await userRequest.post("/checkout/payment", {
+            tokenId: stripeToken.id,
+            amount: mode === "buy" ? price : bid,
+          });
+          navigate("/success", {
+            state: { stripeData: res.data, productId: id, size, lowestAsk },
+          });
+        }
       } catch (err) {}
     };
     stripeToken && makeRequest();
-  }, [stripeToken, navigate, price, id, size, bid, mode]);
+  }, [stripeToken, navigate, price, id, size, bid, mode, lowestAsk]);
 
   useEffect(() => {
     const getHighestBid = async () => {
@@ -168,6 +190,20 @@ const Checkout = () => {
       }
     };
     getHighestBid();
+  }, [id, size]);
+
+  useEffect(() => {
+    const getLowestAsk = async () => {
+      if (size) {
+        try {
+          const res = await publicRequest.get(
+            "/asks/lowestask/" + id + "/" + size
+          );
+          setLowestAsk(res.data);
+        } catch (err) {}
+      }
+    };
+    getLowestAsk();
   }, [id, size]);
 
   return (
@@ -244,7 +280,7 @@ const Checkout = () => {
                 <Limit>A minimum bid value of $100 is required</Limit>
                 <StripeCheckout
                   name="LuxHub"
-                  image="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+                  image="../../public/logo.png"
                   billingAddress
                   shippingAddress
                   description={`Tour total is ${bid}`}
@@ -253,7 +289,7 @@ const Checkout = () => {
                   stripeKey={KEY}
                   locale="en"
                 >
-                  <CheckoutButton>PLACE BID</CheckoutButton>
+                  <CheckoutButton disabled={!bid}>PLACE BID</CheckoutButton>
                 </StripeCheckout>
               </BidWrapper>
             )}

@@ -85,6 +85,9 @@ const CheckoutButton = styled.button`
   color: white;
   font-weight: 600;
   cursor: pointer;
+  &:disabled {
+    opacity: 0.5;
+  }
 `;
 const ButtonContainer = styled.div`
   display: flex;
@@ -117,6 +120,7 @@ const Sell = () => {
   const [product, setProduct] = useState({});
   const [ask, setAsk] = useState("");
   const [lowestAsk, setLowestAsk] = useState("");
+  const [highestBid, setHighestBid] = useState("");
   const [mode, setMode] = useState("ask");
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.currentUser);
@@ -149,19 +153,45 @@ const Sell = () => {
     getLowestAsk();
   }, [id, size]);
 
+  useEffect(() => {
+    const getHighestBid = async () => {
+      if (size) {
+        try {
+          const res = await publicRequest.get(
+            "/bids/highestbid/" + id + "/" + size
+          );
+          setHighestBid(res.data);
+        } catch (err) {}
+      }
+    };
+    getHighestBid();
+  }, [id, size]);
+
   const handleClick = () => {
-    const makeRequest = async () => {
+    const makeAskRequest = async () => {
       try {
-        const res = await userRequest.post("/asks", {
-          productId: id,
-          size,
-          price: mode === "sell" ? price : ask,
-          userId: currentUser._id,
-        });
-        navigate("/successask", { state: res.data });
+        if (highestBid && ask <= highestBid.price) {
+          const res = await userRequest.post("/orders", {
+            productId: id,
+            size,
+            price: highestBid.price,
+            seller: currentUser._id,
+            buyer: highestBid.userId,
+          });
+          await userRequest.delete("/bids/" + highestBid._id);
+          navigate("/successorder", { state: res.data });
+        } else {
+          const res = await userRequest.post("/asks", {
+            productId: id,
+            size,
+            price: mode === "sell" ? price : ask,
+            userId: currentUser._id,
+          });
+          navigate("/successask", { state: res.data });
+        }
       } catch (err) {}
     };
-    makeRequest();
+    makeAskRequest();
   };
 
   return (
@@ -222,7 +252,9 @@ const Sell = () => {
                   onChange={(e) => setAsk(e.target.value)}
                 />
                 <Limit>A minimum bid value of $100 is required</Limit>
-                <CheckoutButton onClick={handleClick}>PLACE ASK</CheckoutButton>
+                <CheckoutButton onClick={handleClick} disabled={!ask}>
+                  PLACE ASK
+                </CheckoutButton>
               </BidWrapper>
             )}
           </Summary>

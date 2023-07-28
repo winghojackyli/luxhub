@@ -18,7 +18,7 @@ router.post("/", verifyToken, async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await Ask.findByIdAndDelete(req.params.id);
     res.status(200).json("Ask has been deleted.");
