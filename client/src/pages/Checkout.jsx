@@ -141,6 +141,8 @@ const Checkout = () => {
 
   const onChangeMode = (mode) => {
     setMode(mode);
+    if (mode === "buy") setBid(price);
+    else setBid("");
   };
 
   const onToken = (token) => {
@@ -158,7 +160,7 @@ const Checkout = () => {
             seller: lowestAsk.userId,
             buyer: currentUser._id,
           });
-          await userRequest.delete("/bids/" + lowestAsk._id);
+          await userRequest.delete("/asks/" + lowestAsk._id);
           await userRequest.post("/checkout/payment", {
             tokenId: stripeToken.id,
             amount: lowestAsk.price,
@@ -176,7 +178,17 @@ const Checkout = () => {
       } catch (err) {}
     };
     stripeToken && makeRequest();
-  }, [stripeToken, navigate, price, id, size, bid, mode, lowestAsk]);
+  }, [
+    stripeToken,
+    navigate,
+    price,
+    id,
+    size,
+    bid,
+    mode,
+    lowestAsk,
+    currentUser,
+  ]);
 
   useEffect(() => {
     const getHighestBid = async () => {
@@ -205,6 +217,7 @@ const Checkout = () => {
     };
     getLowestAsk();
   }, [id, size]);
+
 
   return (
     <Container>

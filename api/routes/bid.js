@@ -27,6 +27,25 @@ router.delete("/:id", verifyToken, async (req, res) => {
   }
 });
 
+//GET ALL BIDS
+router.get("/find/:productId", async (req, res) => {
+  try {
+    const bids = await Bid.aggregate([
+      {
+        $match: {
+          productId: req.params.productId,
+        },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+    ]);
+    res.status(200).json(bids);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //GET USER BIDS
 router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
   try {

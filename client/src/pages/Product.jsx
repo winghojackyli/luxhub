@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
 import Announcement from "../components/Announcement";
 import { mobile } from "../responsive";
 import { useLocation, useNavigate } from "react-router-dom";
-import { publicRequest } from "../requestMethods";
+import { publicRequest, userRequest } from "../requestMethods";
+import Chart from "../components/Chart";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -33,6 +34,12 @@ const Title = styled.h1`
 const Description = styled.p`
   margin: 20px 0px;
 `;
+const Details = styled.h4`
+  font-weight: 150;
+  font-size: 30px;
+  margin: 20px 0px;
+`;
+
 const Price = styled.span`
   font-weight: 100;
   font-size: 35px;
@@ -79,6 +86,11 @@ const Button = styled.button`
   }
 `;
 
+const ChartContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 const Product = () => {
   const location = useLocation();
   const id = location.pathname.split("/")[2];
@@ -87,6 +99,51 @@ const Product = () => {
   const [bid, setBid] = useState("");
   const [ask, setAsk] = useState("");
   const navigate = useNavigate();
+  const [productStats, setProductStats] = useState([]);
+  const [priceStats, setPriceStats] = useState([]);
+  const MONTHS = useMemo(
+    () => [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    []
+  );
+  useEffect(() => {
+    const getStats = async () => {
+      try {
+        const resSales = await userRequest.get(`/orders/${id}/sales`);
+        resSales.data.map((item) =>
+          setProductStats((prev) => [
+            ...prev,
+            {
+              xaxis: MONTHS[item._id - 1],
+              yaxis: item.total,
+              Sales: item.total,
+            },
+          ])
+        );
+
+        const resTrend = await userRequest.get(`/orders/${id}/trend`);
+        resTrend.data.map((item) =>
+          setPriceStats((prev) => [
+            ...prev,
+            { yaxis: item.price, Price: item.price },
+          ])
+        );
+      } catch (err) {}
+    };
+    getStats();
+  }, [MONTHS, id]);
 
   useEffect(() => {
     const getProduct = async () => {
@@ -144,6 +201,10 @@ const Product = () => {
         <InfoContainer>
           <Title>{product.title}</Title>
           <Description>{product.desc}</Description>
+          <Details>Number Sold: {product.numSold}</Details>
+          <Details>
+            Release Date: {new Date(product.releaseDate).toLocaleDateString()}
+          </Details>
           {size ? (
             <>
               <PriceContainer>
@@ -153,7 +214,7 @@ const Product = () => {
                   <Price>No Bid</Price>
                 )}
                 <Button onClick={() => handleClick("sell")} disabled={!size}>
-                  ASK or SELL FOR ${bid}
+                  {bid ? `ASK or SELL FOR ${bid}` : `ASK`}
                 </Button>
               </PriceContainer>
               <PriceContainer>
@@ -163,7 +224,7 @@ const Product = () => {
                   <Price>No Ask</Price>
                 )}
                 <Button onClick={() => handleClick("buy")} disabled={!size}>
-                  BID or BUY FOR ${ask}
+                  {ask ? `BID or BUY FOR ${ask}` : `BID`}
                 </Button>
               </PriceContainer>
             </>
@@ -185,6 +246,10 @@ const Product = () => {
           </FilterContainer>
         </InfoContainer>
       </Wrapper>
+      <ChartContainer>
+        <Chart data={productStats} title="Product Sales" grid dataKey="Sales" />
+        <Chart data={priceStats} title="Price Trend" grid dataKey="Price" />
+      </ChartContainer>
       <Newsletter />
       <Footer />
     </Container>

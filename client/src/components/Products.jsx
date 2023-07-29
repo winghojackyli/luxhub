@@ -74,14 +74,10 @@ const Products = ({ filters, sort }) => {
         </SearchResult>
       )}
       <Container>
-        {!sort
-          ? products
-              .slice(0, 10)
-              .map((item) => <ProductItem item={item} key={item.id} />)
-          : filteredProducts.map((item) => (
-              <ProductItem item={item} key={item.id} />
-            ))}
-      </Container>
+      {filteredProducts.map((item) => (
+        <ProductItem item={item} key={item.id} />
+      ))}
+    </Container>
     </>
   );
 };
