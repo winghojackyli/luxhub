@@ -43,17 +43,24 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
-// Search product by name title
+// Search product by name title and brand
 router.get("/find", async (req, res) => {
   const qSearch = req.query.search;
 
   try {
     if (qSearch) {
       const products = await Product.find({
-        title: {
-          $regex: qSearch,
-          $options: "i",
-        },
+        $or: [
+          {
+            title: {
+              $regex: qSearch,
+              $options: "i",
+            },
+          },
+          {
+            brand: { $regex: qSearch, $options: "i" },
+          },
+        ],
       }).sort({ createdAt: -1 });
       res.status(200).json(products);
     }

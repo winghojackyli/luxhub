@@ -17,7 +17,6 @@ import ScrollToTop from "./helpers/ScrollToTop";
 import Sell from "./pages/Sell";
 import SuccessAsk from "./pages/SuccessAsk";
 import SuccessOrder from "./pages/SuccessOrder";
-import SearchProducts from "./pages/SearchProducts";
 
 const App = () => {
   const user = useSelector((state) => state.currentUser);
@@ -30,6 +29,7 @@ const App = () => {
         <Route path="/products" element={<ProductList />} />
         <Route path="/products/:brand" element={<ProductList />} />
         <Route path="/product/:id" element={<Product />} />
+        <Route path="/find" element={<ProductList />} />
         <Route path="/checkout/:id" element={<Checkout />} />
         <Route path="/sell/:id" element={<Sell />} />
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
@@ -40,7 +40,6 @@ const App = () => {
         <Route path="/success" element={<Success />} />
         <Route path="/successask" element={<SuccessAsk />} />
         <Route path="/successorder" element={<SuccessOrder />} />
-        <Route path="/find" element={<SearchProducts />} />
       </Routes>
     </Router>
   );
