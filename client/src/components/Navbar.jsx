@@ -116,7 +116,7 @@ const Navbar = ({ user }) => {
           </Link>
           {user ? (
             <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              <MenuItem onClick={handleLogout}>LOGOUT</MenuItem>
             </Link>
           ) : (
             <>

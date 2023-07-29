@@ -13,6 +13,8 @@ const Container = styled.div`
 
 const SearchResult = styled.h4`
   padding-left: 20px;
+  font-size: 20px;
+  font-weight: 300;
 `;
 
 const Products = ({ filters, sort }) => {
@@ -70,14 +72,14 @@ const Products = ({ filters, sort }) => {
     <>
       {qSearch && (
         <SearchResult>
-          Browse {products.length} for "{qSearch}"
+          {products.length || "No"} results found for "{qSearch}"
         </SearchResult>
       )}
       <Container>
-      {filteredProducts.map((item) => (
-        <ProductItem item={item} key={item.id} />
-      ))}
-    </Container>
+        {filteredProducts.map((item) => (
+          <ProductItem item={item} key={item.id} />
+        ))}
+      </Container>
     </>
   );
 };

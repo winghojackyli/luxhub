@@ -106,10 +106,17 @@ router.get("/:productId/trend", verifyToken, async (req, res) => {
           productId: req.params.productId,
         },
       },
-      { $project: { price: 1} },
+      {
+        $project: {
+          price: 1,
+          month: { $month: "$createdAt" },
+          day: { $dayOfMonth: "$createdAt" },
+        },
+      },
       {
         $sort: { createdAt: 1 },
       },
+      { $limit: 10 },
     ]);
     res.status(200).json(data);
   } catch (err) {

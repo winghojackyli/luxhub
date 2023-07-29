@@ -137,7 +137,11 @@ const Product = () => {
         resTrend.data.map((item) =>
           setPriceStats((prev) => [
             ...prev,
-            { yaxis: item.price, Price: item.price },
+            {
+              xaxis: `${MONTHS[item.month - 1]} ${item.day}`,
+              yaxis: item.price,
+              Price: item.price,
+            },
           ])
         );
       } catch (err) {}
@@ -244,6 +248,8 @@ const Product = () => {
               </FilterSize>
             </Filter>
           </FilterContainer>
+          <Button>View All Bids</Button>
+          <Button>View All Asks</Button>
         </InfoContainer>
       </Wrapper>
       <ChartContainer>
