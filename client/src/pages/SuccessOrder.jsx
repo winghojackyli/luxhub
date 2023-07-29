@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { userRequest } from "../requestMethods";
 
 const Container = styled.div`
   height: 100vh;
@@ -20,8 +21,13 @@ const SuccessOrder = () => {
   const [orderId, setOrderId] = useState(null);
   const location = useLocation();
   const data = location.state;
+
   useEffect(() => {
-    setOrderId(data._id);
+    const updateNumSold = async () => {
+      await userRequest.put(`/products/${data.productId}/sold`);
+    };
+    data && updateNumSold();
+    data && setOrderId(data._id);
   }, [data]);
   return (
     <Container>

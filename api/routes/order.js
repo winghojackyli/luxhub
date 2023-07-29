@@ -63,6 +63,60 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
+//GET PRODUCT SALES STATS
+router.get("/:productId/sales", verifyToken, async (req, res) => {
+  const date = new Date();
+  const lastYear = new Date(date.setFullYear(date.getFullYear - 1));
+
+  try {
+    const data = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: lastYear },
+          productId: req.params.productId,
+        },
+      },
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: "$month",
+          total: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ]);
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//GET PRICE TREND
+router.get("/:productId/trend", verifyToken, async (req, res) => {
+  try {
+    const data = await Order.aggregate([
+      {
+        $match: {
+          productId: req.params.productId,
+        },
+      },
+      { $project: { price: 1} },
+      {
+        $sort: { createdAt: 1 },
+      },
+    ]);
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //GET MONTHLY INCOME
 router.get("/income", verifyTokenAndAdmin, async (req, res) => {
   const productId = req.query.pid;

@@ -33,6 +33,22 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
+//UPDATE NUM SOLD
+router.put("/:id/sold", verifyToken, async (req, res) => {
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      {
+        $inc: { numSold: 1 },
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedProduct);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //DELETE
 router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
@@ -71,6 +87,37 @@ router.get("/", async (req, res) => {
       products = await Product.find();
     }
     res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/bestsellers", async (req, res) => {
+  try {
+    const data = await Product.aggregate([
+      {
+        $sort: { numSold: -1 },
+      },
+    ]);
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/new", async (req, res) => {
+  try {
+    const data = await Product.aggregate([
+      {
+        $addFields: {
+          releaseDate: { $toDate: "$releaseDate" },
+        },
+      },
+      {
+        $sort: { releaseDate: -1 },
+      },
+    ]);
+    res.status(200).json(data);
   } catch (err) {
     res.status(500).json(err);
   }

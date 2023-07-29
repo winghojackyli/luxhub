@@ -27,6 +27,25 @@ router.delete("/:id", verifyToken, async (req, res) => {
   }
 });
 
+//GET ALL ASKS
+router.get("/find/:productId", async (req, res) => {
+  try {
+    const asks = await Ask.aggregate([
+      {
+        $match: {
+          productId: req.params.productId,
+        },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+    ]);
+    res.status(200).json(asks);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //GET USER ASKS
 router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
   try {
