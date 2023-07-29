@@ -59,6 +59,32 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
+// Search product by name title and brand
+router.get("/find", async (req, res) => {
+  const qSearch = req.query.search;
+
+  try {
+    if (qSearch) {
+      const products = await Product.find({
+        $or: [
+          {
+            title: {
+              $regex: qSearch,
+              $options: "i",
+            },
+          },
+          {
+            brand: { $regex: qSearch, $options: "i" },
+          },
+        ],
+      }).sort({ createdAt: -1 });
+      res.status(200).json(products);
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //GET PRODUCT BY ID
 router.get("/find/:id", async (req, res) => {
   try {

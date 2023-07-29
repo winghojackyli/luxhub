@@ -3,7 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../redux/apiCalls";
 
 const Container = styled.div`
@@ -74,9 +74,22 @@ const MenuItem = styled.div`
 
 const Navbar = ({ user }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleLogout = () => {
     logout(dispatch);
   };
+
+  const goToSearch = (e) => {
+    if (e.key === "Enter") {
+      const qSearch = e.target.value;
+      navigate({
+        pathname: "/find",
+        search: `?search=${qSearch}`,
+      });
+      e.target.value = "";
+    }
+  };
+
   return (
     <Container>
       <Wrapper>
@@ -86,7 +99,7 @@ const Navbar = ({ user }) => {
           </Language>
           <SearchContainer>
             <Search style={{ color: "grey", fontSize: 16, padding: 5 }} />
-            <Input placeholder="Search" />
+            <Input placeholder="Search" onKeyDown={goToSearch} />
           </SearchContainer>
         </Left>
         <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>

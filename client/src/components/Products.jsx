@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
+import { useSearchParams } from "react-router-dom";
 import ProductItem from "./ProductItem";
 
 const Container = styled.div`
@@ -10,19 +11,32 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
+const SearchResult = styled.h4`
+  padding-left: 20px;
+`;
+
 const Products = ({ filters, sort }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
+  const qSearch = useSearchParams()[0].get("search");
+
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/products");
+        let res;
+        if (qSearch) {
+          res = await axios.get(
+            "http://localhost:5000/api/products/find?search=" + qSearch
+          );
+        } else {
+          res = await axios.get("http://localhost:5000/api/products");
+        }
         setProducts(res.data);
       } catch (err) {}
     };
     getProducts();
-  }, []);
+  }, [qSearch]);
 
   useEffect(() => {
     if (filters) {
@@ -53,11 +67,18 @@ const Products = ({ filters, sort }) => {
   }, [sort]);
 
   return (
-    <Container>
+    <>
+      {qSearch && (
+        <SearchResult>
+          Browse {products.length} for "{qSearch}"
+        </SearchResult>
+      )}
+      <Container>
       {filteredProducts.map((item) => (
         <ProductItem item={item} key={item.id} />
       ))}
     </Container>
+    </>
   );
 };
 
