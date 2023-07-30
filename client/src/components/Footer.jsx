@@ -10,6 +10,7 @@ import {
 import React from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -105,15 +106,15 @@ const Footer = () => {
       <Center>
         <Title>Useful Links</Title>
         <List>
-          <ListItem>Home</ListItem>
-          <ListItem>Cart</ListItem>
-          <ListItem>Men's Wear</ListItem>
-          <ListItem>Women's Wear</ListItem>
+          <ListItem>
+            <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
+              Home
+            </Link>
+          </ListItem>
+          <ListItem>Top</ListItem>
+          <ListItem>Bottom</ListItem>
+          <ListItem>Shoes</ListItem>
           <ListItem>Accessories</ListItem>
-          <ListItem>Sale</ListItem>
-          <ListItem>My Account</ListItem>
-          <ListItem>Order Tracking</ListItem>
-          <ListItem>Wishlist</ListItem>
           <ListItem>Terms</ListItem>
         </List>
       </Center>
@@ -121,7 +122,7 @@ const Footer = () => {
         <Title>Contact</Title>
         <ContactItem>
           <Room style={{ marginRight: "10px" }} />
-          1475 Bedford Hwy , Bedford , Nova Scotia, B4A 3Z5
+          1475 Bedford Hwy , BC , Canada, V3V 0E1
         </ContactItem>
         <ContactItem>
           <Phone style={{ marginRight: "10px" }} />
@@ -129,7 +130,7 @@ const Footer = () => {
         </ContactItem>
         <ContactItem>
           <MailOutline style={{ marginRight: "10px" }} />
-          contact@mail.com
+          luxhubcanada@gmail.com
         </ContactItem>
         <Payment src="https://i.ibb.co/Qfvn4z6/payment.png" />
       </Right>

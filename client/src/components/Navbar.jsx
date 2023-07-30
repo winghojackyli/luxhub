@@ -1,10 +1,11 @@
-import { LanguageOutlined, Search } from "@material-ui/icons";
+import { Search } from "@material-ui/icons";
 import React from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../redux/apiCalls";
+import logo from "../assets/logo.png";
 
 const Container = styled.div`
   height: 80px;
@@ -24,9 +25,15 @@ const Left = styled.div`
   align-items: center;
 `;
 
-const Language = styled.span`
+const Logo = styled.span`
   cursor: pointer;
   ${mobile({ display: "none" })}
+`;
+
+const Img = styled.img`
+  width: 40px;
+  height: auto;
+  object-fit: cover;
 `;
 
 const SearchContainer = styled.div`
@@ -39,6 +46,7 @@ const SearchContainer = styled.div`
 
 const Input = styled.input`
   width: 240px;
+  font-size: 16px;
   border: none;
   ${mobile({ width: "50px" })}
   :focus {
@@ -51,7 +59,7 @@ const Center = styled.div`
   text-align: center;
 `;
 
-const Logo = styled.h1`
+const LogoName = styled.h1`
   font-weight: bold;
   font-size: 40px;
   ${mobile({ fontSize: "24px" })}
@@ -94,17 +102,19 @@ const Navbar = ({ user }) => {
     <Container>
       <Wrapper>
         <Left>
-          <Language>
-            <LanguageOutlined />
-          </Language>
+          <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
+            <Logo>
+              <Img src={logo} alt="" />
+            </Logo>
+          </Link>
           <SearchContainer>
-            <Search style={{ color: "grey", fontSize: 16, padding: 5 }} />
-            <Input placeholder="Search" onKeyDown={goToSearch} />
+            <Search style={{ color: "grey", fontSize: 18, padding: 5 }} />
+            <Input placeholder="Search Product" onKeyDown={goToSearch} />
           </SearchContainer>
         </Left>
         <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
           <Center>
-            <Logo>LuxHub.</Logo>
+            <LogoName>LuxHub.</LogoName>
           </Center>
         </Link>
         <Right>
@@ -113,6 +123,12 @@ const Navbar = ({ user }) => {
             style={{ color: "inherit", textDecoration: "none" }}
           >
             <MenuItem>BROWSE</MenuItem>
+          </Link>
+          <Link
+            to="/posts"
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            <MenuItem>STYLES</MenuItem>
           </Link>
           {user ? (
             <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>

@@ -1,38 +1,54 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
-  margin: 5px;
-  min-width: 280px;
-  height: 400px;
+  margin: 10px;
+  min-width: 300px;
+  height: 550px;
   display: flex;
   align-items: center;
   justify-content: start;
   flex-direction: column;
-  flex-basis: 20%;
+  flex-basis: 10%;
 `;
 
 const Image = styled.img`
-  height: 75%;
-  width: 220px;
+  width: 100%;
+  height: 450px;
+  object-fit: cover;
   border-radius: 10px;
 `;
 
-const Details = styled.div``;
-
-const ProdTitle = styled.span`
-  display: inline-block;
-  margin-top: 5px;
+const Details = styled.ul`
+  margin: 0px 5px;
+  padding: 0;
 `;
 
-const Post = ({ photo }) => {
+const ProdTitle = styled.li`
+  list-style-type: circle;
+  font-size: 16px;
+  font-weight: 300;
+  display: inline-block;
+  margin-top: 5px;
+  &:hover {
+    color: #707070;
+  }
+`;
+
+const Post = ({ img, products }) => {
   return (
     <Container>
-      <Image src={photo} />
+      <Image src={img} />
       <Details>
-        <ProdTitle>#Yeezy Slides</ProdTitle>
-        <br />
-        <ProdTitle>#Essential Hoodie</ProdTitle>
+        {products.map((product) => (
+          <Link
+            to={`/product/${product.productId}`}
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            <ProdTitle>{product.productName}</ProdTitle>
+          </Link>
+        ))}
       </Details>
     </Container>
   );

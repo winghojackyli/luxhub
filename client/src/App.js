@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Product from "./pages/Product";
 import ProductList from "./pages/ProductList";
 import Register from "./pages/Register";
+import Styles from "./pages/Styles";
 import {
   BrowserRouter as Router,
   Routes,
@@ -30,6 +31,7 @@ const App = () => {
         <Route path="/products/:brand" element={<ProductList />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/find" element={<ProductList />} />
+        <Route path="/posts" element={<Styles />} />
         <Route path="/checkout/:id" element={<Checkout />} />
         <Route path="/sell/:id" element={<Sell />} />
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />

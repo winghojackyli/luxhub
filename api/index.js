@@ -9,6 +9,8 @@ const orderRoute = require("./routes/order");
 const stripeRoute = require("./routes/stripe");
 const bidRoute = require("./routes/bid");
 const askRoute = require("./routes/ask");
+const postRoute = require("./routes/post");
+const emailRoute = require("./routes/email");
 
 const app = express();
 dotenv.config();
@@ -32,6 +34,8 @@ app.use("/api/products", productRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/bids", bidRoute);
 app.use("/api/asks", askRoute);
+app.use("/api/posts", postRoute);
+app.use("/api/emails", emailRoute);
 app.use("/api/checkout", stripeRoute);
 
 app.listen(process.env.PORT || 5000, () => {
