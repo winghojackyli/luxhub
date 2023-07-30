@@ -7,6 +7,7 @@ import { mobile } from "../responsive";
 import { useLocation, useNavigate } from "react-router-dom";
 import { publicRequest, userRequest } from "../requestMethods";
 import Chart from "../components/Chart";
+import BasicModal from "../components/BasicModal";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -101,6 +102,16 @@ const Product = () => {
   const navigate = useNavigate();
   const [productStats, setProductStats] = useState([]);
   const [priceStats, setPriceStats] = useState([]);
+
+  // Modal related
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = (type) => {
+    setOpen(true);
+    setType(type);
+  };
+  const handleClose = () => setOpen(false);
+  const [type, setType] = useState();
+
   const MONTHS = useMemo(
     () => [
       "Jan",
@@ -248,8 +259,21 @@ const Product = () => {
               </FilterSize>
             </Filter>
           </FilterContainer>
-          <Button>View All Bids</Button>
-          <Button>View All Asks</Button>
+          <Button
+            onClick={() => {
+              handleOpen("Bid");
+            }}
+          >
+            View All Bids
+          </Button>
+          <Button
+            onClick={() => {
+              handleOpen("Ask");
+            }}
+          >
+            View All Asks
+          </Button>
+          <BasicModal open={open} handleClose={handleClose} type={type} />
         </InfoContainer>
       </Wrapper>
       <ChartContainer>

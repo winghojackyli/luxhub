@@ -10,19 +10,29 @@ const Container = styled.div`
 
 const AskBidData = ({ type }) => {
   // const [tableData, setTableData] = useState([]);
+  // type: Ask, Bid
 
   const columns = [
     {
       field: "quantity",
       headerName: "Quantity",
+      width: 133,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "size",
       headerName: "Size",
+      width: 133,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: `price`,
       headerName: `${type} Price`,
+      width: 133,
+      align: "center",
+      headerAlign: "center",
     },
   ];
 
