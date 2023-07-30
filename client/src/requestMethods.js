@@ -4,7 +4,7 @@ const BASE_URL = "http://localhost:5000/api/";
 
 const currentUser = JSON.parse(
   localStorage.getItem("persist:root")
-).currentUser;
+)?.currentUser;
 
 const TOKEN = currentUser && JSON.parse(currentUser)?.accessToken;
 

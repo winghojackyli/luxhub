@@ -124,39 +124,26 @@ router.get("/:productId/trend", verifyToken, async (req, res) => {
   }
 });
 
-//GET MONTHLY INCOME
-router.get("/income", verifyTokenAndAdmin, async (req, res) => {
-  const productId = req.query.pid;
-  const date = new Date();
-  const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
-  const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
+//GET LATEST ORDER
+router.get("/:productId/latest", async (req, res) => {
   try {
-    const income = await Order.aggregate([
+    const data = await Order.aggregate([
       {
         $match: {
-          createdAt: { $gte: previousMonth },
-          ...(productId && {
-            products: { $elemMatch: { productId } },
-          }),
+          productId: req.params.productId,
         },
+      },
+      {
+        $sort: { createdAt: -1 },
       },
       {
         $project: {
-          month: { $month: "$createdAt" },
-          sales: "$amount",
+          price: 1,
         },
       },
-      {
-        $group: {
-          _id: "$month",
-          total: { $sum: "$sales" },
-        },
-      },
-      {
-        $sort: { _id: 1 },
-      },
+      { $limit: 1 },
     ]);
-    res.status(200).json(income);
+    res.status(200).json(data);
   } catch (err) {
     res.status(500).json(err);
   }

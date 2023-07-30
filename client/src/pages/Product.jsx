@@ -34,10 +34,17 @@ const Title = styled.h1`
 const Description = styled.p`
   margin: 20px 0px;
 `;
+
+const DetailsWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
 const Details = styled.h4`
   font-weight: 150;
-  font-size: 30px;
-  margin: 20px 0px;
+  font-size: 25px;
+  margin: 10px 0px;
+  padding-right: 100px;
 `;
 
 const Price = styled.span`
@@ -98,6 +105,7 @@ const Product = () => {
   const [size, setSize] = useState("");
   const [bid, setBid] = useState("");
   const [ask, setAsk] = useState("");
+  const [latestSalesPrice, setLatestSalesPrice] = useState("");
   const navigate = useNavigate();
   const [productStats, setProductStats] = useState([]);
   const [priceStats, setPriceStats] = useState([]);
@@ -187,6 +195,17 @@ const Product = () => {
     getAsk();
   }, [id, size]);
 
+  useEffect(() => {
+    const getLatestSalesPrice = async () => {
+      try {
+        const res = await publicRequest.get(`/orders/${id}/latest`);
+        console.log(res.data[0]);
+        res.data && setLatestSalesPrice(res.data[0].price);
+      } catch (err) {}
+    };
+    getLatestSalesPrice();
+  }, [id]);
+
   const handleClick = (action) => {
     if (action === "buy") {
       navigate(`/checkout/${id}?size=${size}&price=${ask}`);
@@ -205,10 +224,15 @@ const Product = () => {
         <InfoContainer>
           <Title>{product.title}</Title>
           <Description>{product.desc}</Description>
-          <Details>Number Sold: {product.numSold}</Details>
           <Details>
             Release Date: {new Date(product.releaseDate).toLocaleDateString()}
           </Details>
+          <DetailsWrapper>
+            <Details>Number Sold: {product.numSold}</Details>
+            {latestSalesPrice && (
+              <Details>Last Sale: $ {latestSalesPrice}</Details>
+            )}
+          </DetailsWrapper>
           {size ? (
             <>
               <PriceContainer>
