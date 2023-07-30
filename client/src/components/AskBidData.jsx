@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 const Container = styled.div`
   height: 700px;
@@ -9,8 +11,28 @@ const Container = styled.div`
 `;
 
 const AskBidData = ({ type }) => {
-  // const [tableData, setTableData] = useState([]);
+  const [tableData, setTableData] = useState([]);
   // type: Ask, Bid
+  const location = useLocation();
+  const id = location.pathname.split("/")[2];
+
+  useEffect(() => {
+    const getAskBid = async () => {
+      try {
+        let res;
+        if (type === "Ask") {
+          res = await axios.get(`http://localhost:5000/api/asks/find/${id}`);
+        } else if (type === "Bid") {
+          res = await axios.get(`http://localhost:5000/api/bids/find/${id}`);
+        }
+        console.log(res.data);
+        setTableData(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getAskBid();
+  }, []);
 
   const columns = [
     {
@@ -36,42 +58,16 @@ const AskBidData = ({ type }) => {
     },
   ];
 
-  const tableData = [
-    { quantity: 2, size: 8, price: 123 },
-    { quantity: 2, size: 8, price: 124 },
-    { quantity: 2, size: 8, price: 125 },
-    { quantity: 2, size: 8, price: 126 },
-    { quantity: 2, size: 8, price: 127 },
-    { quantity: 2, size: 8, price: 128 },
-    { quantity: 2, size: 8, price: 129 },
-    { quantity: 2, size: 8, price: 130 },
-    { quantity: 2, size: 8, price: 131 },
-    { quantity: 2, size: 8, price: 132 },
-    { quantity: 2, size: 8, price: 133 },
-    { quantity: 2, size: 8, price: 128 },
-    { quantity: 2, size: 8, price: 129 },
-    { quantity: 2, size: 8, price: 130 },
-    { quantity: 2, size: 8, price: 131 },
-    { quantity: 2, size: 8, price: 132 },
-    { quantity: 2, size: 8, price: 133 },
-    { quantity: 2, size: 8, price: 128 },
-    { quantity: 2, size: 8, price: 129 },
-    { quantity: 2, size: 8, price: 130 },
-    { quantity: 2, size: 8, price: 131 },
-    { quantity: 2, size: 8, price: 132 },
-    { quantity: 2, size: 8, price: 133 },
-    { quantity: 2, size: 8, price: 128 },
-    { quantity: 2, size: 8, price: 129 },
-    { quantity: 2, size: 8, price: 130 },
-    { quantity: 2, size: 8, price: 131 },
-    { quantity: 2, size: 8, price: 132 },
-    { quantity: 2, size: 8, price: 133 },
-  ];
+  const rows = tableData.map((item) => ({
+    price: `$${item._id.price}`,
+    size: `US ${item._id.size}`,
+    quantity: item.quantity,
+  }));
 
   return (
     <div style={{ height: "100%", width: "100%" }}>
       <DataGrid
-        rows={tableData}
+        rows={rows}
         columns={columns}
         getRowId={(row) => row.size + row.price}
       />
@@ -80,15 +76,3 @@ const AskBidData = ({ type }) => {
 };
 
 export default AskBidData;
-
-/*
-
-<Container>
-      <DataGrid
-        rows={tableData}
-        getRowId={(row) => row.size + row.price}
-        columns={columns}
-        pageSize={12}
-      />
-    </Container>
-*/
