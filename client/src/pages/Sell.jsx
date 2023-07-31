@@ -113,7 +113,7 @@ const Limit = styled.div`
 
 const Sell = () => {
   const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const size = searchParams.get("size");
   const price = searchParams.get("price");
   const id = location.pathname.split("/")[2];

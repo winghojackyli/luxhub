@@ -37,7 +37,10 @@ router.get("/find/:productId", async (req, res) => {
         },
       },
       {
-        $sort: { createdAt: -1 },
+        $group: {
+          _id: { size: "$size", price: "$price" },
+          quantity: { $count: {} },
+        },
       },
     ]);
     res.status(200).json(bids);
