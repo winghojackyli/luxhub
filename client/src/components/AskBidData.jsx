@@ -3,6 +3,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { Stack } from "@mui/material";
 
 const Container = styled.div`
   height: 700px;
@@ -70,6 +71,15 @@ const AskBidData = ({ type }) => {
         rows={rows}
         columns={columns}
         getRowId={(row) => row.size + row.price}
+        slots={{
+          noRowsOverlay: () => {
+            return (
+              <Stack height="100%" alignItems="center" justifyContent="center">
+                No Active {type === "Ask" ? "Ask" : "Bid"}
+              </Stack>
+            );
+          },
+        }}
       />
     </div>
   );
