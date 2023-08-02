@@ -6,7 +6,7 @@ const PostSchema = new mongoose.Schema(
     products: [
       {
         productId: { type: String, required: true },
-        productName: { type: String, required: true },
+        title: { type: String, required: true },
       },
     ],
     img: { type: String, required: true },

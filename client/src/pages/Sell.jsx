@@ -144,7 +144,7 @@ const Sell = () => {
       if (size) {
         try {
           const res = await publicRequest.get(
-            "/asks/lowestask/" + id + "/" + size
+            "/asks/lowestAsk/" + id + "/" + size
           );
           res.data ? setLowestAsk(res.data.price) : setLowestAsk("");
         } catch (err) {}
@@ -158,7 +158,7 @@ const Sell = () => {
       if (size) {
         try {
           const res = await publicRequest.get(
-            "/bids/highestbid/" + id + "/" + size
+            "/bids/highestBid/" + id + "/" + size
           );
           setHighestBid(res.data);
         } catch (err) {}
@@ -179,7 +179,7 @@ const Sell = () => {
             buyer: highestBid.userId,
           });
           await userRequest.delete("/bids/" + highestBid._id);
-          navigate("/successorder", { state: res.data });
+          navigate("/successOrder", { state: res.data });
         } else {
           const res = await userRequest.post("/asks", {
             productId: id,
@@ -187,7 +187,7 @@ const Sell = () => {
             price: mode === "sell" ? price : ask,
             userId: currentUser._id,
           });
-          navigate("/successask", { state: res.data });
+          navigate("/successAsk", { state: res.data });
         }
       } catch (err) {}
     };

@@ -5,7 +5,8 @@ import Products from "../components/Products";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Container = styled.div``;
 
@@ -23,6 +24,21 @@ const FilterText = styled.span`
   margin-right: 20px;
   ${mobile({ marginRight: "0px" })}
 `;
+
+const ProductAddButton = styled.button`
+  width: 100px;
+  border: none;
+  padding: 10px;
+  margin-right: 30px;
+  margin-left: auto;
+  background-color: #00004f;
+  color: white;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  display: ${(props) => (props.show ? "block" : "none")};
+`;
+
 const Select = styled.select`
   padding: 10px;
   margin-right: 20px;
@@ -31,6 +47,7 @@ const Select = styled.select`
 const Option = styled.option``;
 
 const ProductList = () => {
+  const admin = useSelector((state) => state.currentUser?.isAdmin);
   const location = useLocation();
   const branding = location.pathname.split("/")[2];
   const [filters, setFilters] = useState(branding ? { brand: branding } : {});
@@ -52,7 +69,6 @@ const ProductList = () => {
         setFilters(rest);
       }
     }
-    console.log(filters);
   };
 
   return (
@@ -101,6 +117,12 @@ const ProductList = () => {
           </Select>
         </Filter>
       </FilterContainer>
+      <Link
+        to="/newProduct"
+        style={{ color: "inherit", textDecoration: "none" }}
+      >
+        <ProductAddButton show={admin}>Create</ProductAddButton>
+      </Link>
       <Products filters={filters} sort={sort} />
       <Newsletter />
       <Footer />

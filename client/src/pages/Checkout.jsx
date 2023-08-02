@@ -165,7 +165,7 @@ const Checkout = () => {
             tokenId: stripeToken.id,
             amount: lowestAsk.price,
           });
-          navigate("/successorder", { state: res.data });
+          navigate("/successOrder", { state: res.data });
         } else {
           const res = await userRequest.post("/checkout/payment", {
             tokenId: stripeToken.id,
@@ -195,7 +195,7 @@ const Checkout = () => {
       if (size) {
         try {
           const res = await publicRequest.get(
-            "/bids/highestbid/" + id + "/" + size
+            "/bids/highestBid/" + id + "/" + size
           );
           res.data ? setHighestBid(res.data.price) : setHighestBid("");
         } catch (err) {}
@@ -209,7 +209,7 @@ const Checkout = () => {
       if (size) {
         try {
           const res = await publicRequest.get(
-            "/asks/lowestask/" + id + "/" + size
+            "/asks/lowestAsk/" + id + "/" + size
           );
           setLowestAsk(res.data);
         } catch (err) {}

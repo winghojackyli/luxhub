@@ -18,6 +18,8 @@ import ScrollToTop from "./helpers/ScrollToTop";
 import Sell from "./pages/Sell";
 import SuccessAsk from "./pages/SuccessAsk";
 import SuccessOrder from "./pages/SuccessOrder";
+import NewProduct from "./pages/NewProduct";
+import NewPost from "./pages/NewPost";
 
 const App = () => {
   const user = useSelector((state) => state.currentUser);
@@ -40,8 +42,16 @@ const App = () => {
           element={user ? <Navigate to="/" /> : <Register />}
         />
         <Route path="/success" element={<Success />} />
-        <Route path="/successask" element={<SuccessAsk />} />
-        <Route path="/successorder" element={<SuccessOrder />} />
+        <Route path="/successAsk" element={<SuccessAsk />} />
+        <Route path="/successOrder" element={<SuccessOrder />} />
+        <Route
+          path="/newProduct"
+          element={user?.isAdmin ? <NewProduct /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/newPost"
+          element={user?.isAdmin ? <NewPost /> : <Navigate to="/" />}
+        />
       </Routes>
     </Router>
   );

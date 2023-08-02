@@ -85,6 +85,16 @@ router.get("/find", async (req, res) => {
   }
 });
 
+//GET ALL PRODUCTS
+router.get("/", async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //GET PRODUCT BY ID
 router.get("/find/:id", async (req, res) => {
   try {
@@ -118,7 +128,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/bestsellers", async (req, res) => {
+router.get("/bestSellers", async (req, res) => {
   try {
     const data = await Product.aggregate([
       {

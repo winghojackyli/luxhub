@@ -24,7 +24,7 @@ const TopSales = () => {
     const getProducts = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/products/bestsellers"
+          "http://localhost:5000/api/products/bestSellers"
         );
         setProducts(res.data);
       } catch (err) {}

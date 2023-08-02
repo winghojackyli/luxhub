@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Post from "../components/Post";
 import { publicRequest } from "../requestMethods";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Container = styled.div``;
 
@@ -18,7 +20,22 @@ const PostContainer = styled.div`
   justify-content: space-around;
 `;
 
+const PostAddButton = styled.button`
+  width: 100px;
+  border: none;
+  padding: 10px;
+  margin-right: 60px;
+  margin-left: auto;
+  background-color: #00004f;
+  color: white;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  display: ${(props) => (props.show ? "block" : "none")};
+`;
+
 const Styles = () => {
+  const admin = useSelector((state) => state.currentUser?.isAdmin);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -33,6 +50,9 @@ const Styles = () => {
   return (
     <Container>
       <Title>Styles</Title>
+      <Link to="/newPost" style={{ color: "inherit", textDecoration: "none" }}>
+        <PostAddButton show={admin}>Create</PostAddButton>
+      </Link>
       <PostContainer>
         {posts.map((post) => (
           <Post img={post.img} products={post.products} />

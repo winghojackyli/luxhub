@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { publicRequest, userRequest } from "../requestMethods";
 import Chart from "../components/Chart";
 import BasicModal from "../components/BasicModal";
+import moment from "moment";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -112,7 +113,7 @@ const Product = () => {
   const [priceStats, setPriceStats] = useState([]);
 
   // Modal related
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = (type) => {
     setOpen(true);
     setType(type);
@@ -210,7 +211,6 @@ const Product = () => {
     const getLatestSalesPrice = async () => {
       try {
         const res = await publicRequest.get(`/orders/${id}/latest`);
-        console.log(res.data[0]);
         res.data && setLatestSalesPrice(res.data[0].price);
       } catch (err) {}
     };
@@ -236,7 +236,7 @@ const Product = () => {
           <Title>{product.title}</Title>
           <Description>{product.desc}</Description>
           <Details>
-            Release Date: {new Date(product.releaseDate).toLocaleDateString()}
+            Release Date: {moment.utc(product.releaseDate).format("MM/DD/YYYY")}
           </Details>
           <DetailsWrapper>
             <Details>Number Sold: {product.numSold}</Details>

@@ -60,7 +60,7 @@ router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 //GET HIGHTEST BID
-router.get("/highestbid/:productId/:size", async (req, res) => {
+router.get("/highestBid/:productId/:size", async (req, res) => {
   try {
     const bids = await Bid.findOne({
       productId: req.params.productId,

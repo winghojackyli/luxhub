@@ -46,7 +46,7 @@ const Post = ({ img, products }) => {
             to={`/product/${product.productId}`}
             style={{ color: "inherit", textDecoration: "none" }}
           >
-            <ProdTitle>{product.productName}</ProdTitle>
+            <ProdTitle>{product.title}</ProdTitle>
           </Link>
         ))}
       </Details>
