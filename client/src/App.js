@@ -21,6 +21,7 @@ import SuccessOrder from "./pages/SuccessOrder";
 import NewProduct from "./pages/NewProduct";
 import NewPost from "./pages/NewPost";
 import EditProduct from "./pages/EditProduct";
+import EditPost from "./pages/EditPost";
 
 const App = () => {
   const user = useSelector((state) => state.currentUser);
@@ -56,6 +57,10 @@ const App = () => {
         <Route
           path="/newPost"
           element={user?.isAdmin ? <NewPost /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/editPost/:id"
+          element={user?.isAdmin ? <EditPost /> : <Navigate to="/" />}
         />
       </Routes>
     </Router>

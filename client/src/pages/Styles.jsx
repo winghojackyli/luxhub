@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Post from "../components/Post";
-import { publicRequest } from "../requestMethods";
+import { publicRequest, userRequest } from "../requestMethods";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -37,18 +37,22 @@ const PostAddButton = styled.button`
 const Styles = () => {
   const admin = useSelector((state) => state.currentUser?.isAdmin);
   const navigate = useNavigate();
-
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    const getProduct = async () => {
+    const getPost = async () => {
       try {
         const res = await publicRequest.get("/posts");
         setPosts(res.data);
       } catch (err) {}
     };
-    getProduct();
+    getPost();
   }, []);
+
+  const updateProducts = (data) => {
+    setPosts(data);
+  };
+
   return (
     <Container>
       <Title>Styles</Title>
@@ -57,7 +61,13 @@ const Styles = () => {
       </PostAddButton>
       <PostContainer>
         {posts.map((post) => (
-          <Post img={post.img} products={post.products} />
+          <Post
+            img={post.img}
+            products={post.products}
+            id={post._id}
+            key={post._id}
+            update={updateProducts}
+          />
         ))}
       </PostContainer>
     </Container>

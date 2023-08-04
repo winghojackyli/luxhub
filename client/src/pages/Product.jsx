@@ -96,12 +96,16 @@ const Button = styled.button`
     background-color: #f8f4f4;
   }
 `;
-
+const ButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+`;
 const ProductEditButton = styled.button`
   width: 100px;
   border: none;
   padding: 10px;
   margin-bottom: 20px;
+  margin-right: 50px;
   background-color: #00004f;
   color: white;
   border-radius: 5px;
@@ -109,7 +113,18 @@ const ProductEditButton = styled.button`
   cursor: pointer;
   display: ${(props) => (props.show ? "block" : "none")};
 `;
-
+const ProductDeleteButton = styled.button`
+  width: 100px;
+  border: none;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #860000;
+  color: white;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  display: ${(props) => (props.show ? "block" : "none")};
+`;
 const ChartContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -240,6 +255,18 @@ const Product = () => {
       navigate(`/sell/${id}?size=${size}&price=${bid}`);
     }
   };
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+    const deleteProduct = async () => {
+      try {
+        await userRequest
+          .delete(`/products/${id}`)
+          .then(() => navigate("/products"));
+      } catch (err) {}
+    };
+    deleteProduct();
+  };
   return (
     <Container>
       <Announcement />
@@ -248,12 +275,17 @@ const Product = () => {
           <Image src={product.img} />
         </ImgContainer>
         <InfoContainer>
-          <ProductEditButton
-            show={admin}
-            onClick={() => navigate(`/editProduct/${id}`, { state: product })}
-          >
-            Edit
-          </ProductEditButton>
+          <ButtonContainer>
+            <ProductEditButton
+              show={admin}
+              onClick={() => navigate(`/editProduct/${id}`, { state: product })}
+            >
+              Edit
+            </ProductEditButton>
+            <ProductDeleteButton show={admin} onClick={handleDelete}>
+              Delete
+            </ProductDeleteButton>
+          </ButtonContainer>
           <Title>{product.title}</Title>
           <Description>{product.desc}</Description>
           <Details>

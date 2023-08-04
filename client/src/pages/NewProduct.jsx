@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getStorage,
   ref,
@@ -18,7 +18,7 @@ const NewProductTitle = styled.h1``;
 
 const NewProductForm = styled.form`
   display: flex;
-  height: 440px;
+  height: 500px;
   flex-direction: column;
   flex-wrap: wrap;
   margin-top: 10px;
@@ -43,6 +43,35 @@ const NewProductInput = styled.input`
   padding: 10px;
   border: 1px solid grey;
   border-radius: 5px;
+`;
+
+const NewProductSizeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 140px;
+`;
+const NewProductCheckboxContainer = styled.div`
+  display: flex;
+  padding: 5px;
+`;
+
+const NewProductSizeSelectAllButton = styled.button`
+  width: 80px;
+  border: none;
+  padding: 10px;
+  background-color: #00004f;
+  color: white;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+`;
+const NewProductCheckboxLabel = styled.label`
+  font-size: 16px;
+`;
+const NewProductCheckbox = styled.input`
+  margin-right: 10px;
 `;
 
 const NewProductTextArea = styled.textarea`
@@ -72,20 +101,113 @@ const NewProductButton = styled.button`
 `;
 
 const NewProduct = () => {
-  const [inputs, setInputs] = useState();
+  const [inputs, setInputs] = useState({ categories: "top" });
   const [file, setFile] = useState(null);
   const [arrays, setArrays] = useState({});
   const navigate = useNavigate();
+
+  const SHOE_SIZES = [
+    "4",
+    "4.5",
+    "5",
+    "5.5",
+    "6",
+    "6.5",
+    "7",
+    "7.5",
+    "8",
+    "8.5",
+    "9",
+    "9.5",
+    "10",
+    "10.5",
+    "11",
+    "11.5",
+    "12",
+    "12.5",
+    "13",
+    "14",
+  ];
+  const APPAREL_SIZES = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+
+  const [checkedState, setCheckedState] = useState([]);
+
+  useEffect(() => {
+    if (inputs.categories === "shoes") {
+      setCheckedState(new Array(SHOE_SIZES.length).fill(false));
+    } else if (inputs.categories === "top" || inputs.categories === "bottom") {
+      setCheckedState(new Array(APPAREL_SIZES.length).fill(false));
+    } else setCheckedState([]);
+  }, [inputs.categories]);
 
   const handleChange = (e) => {
     setInputs((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
+  const handleCat = (e) => {
+    setInputs((prev) => {
+      return { ...prev, [e.target.name]: e.target.value };
+    });
+    setArrays((prev) => {
+      return { ...prev, size: [] };
+    });
+  };
   const handleArray = (e) => {
     setArrays((prev) => {
       return { ...prev, [e.target.name]: e.target.value.split(",") };
     });
+  };
+
+  const handleCheck = (position) => {
+    const updatedCheckedState = checkedState.map((item, index) =>
+      index === position ? !item : item
+    );
+    setCheckedState(updatedCheckedState);
+    if (inputs.categories === "shoes") {
+      setArrays((prev) => {
+        return {
+          ...prev,
+          size: SHOE_SIZES.filter(
+            (size, index) => updatedCheckedState[index] && size
+          ),
+        };
+      });
+    } else if (inputs.categories === "top" || inputs.categories === "bottom") {
+      setArrays((prev) => {
+        return {
+          ...prev,
+          size: APPAREL_SIZES.filter(
+            (size, index) => updatedCheckedState[index] && size
+          ),
+        };
+      });
+    }
+  };
+
+  const handleSelectAll = (e) => {
+    e.preventDefault();
+    const updatedCheckedState = checkedState.map((item) => (item = true));
+    setCheckedState(updatedCheckedState);
+    if (inputs.categories === "shoes") {
+      setArrays((prev) => {
+        return {
+          ...prev,
+          size: SHOE_SIZES.filter(
+            (size, index) => updatedCheckedState[index] && size
+          ),
+        };
+      });
+    } else if (inputs.categories === "top" || inputs.categories === "bottom") {
+      setArrays((prev) => {
+        return {
+          ...prev,
+          size: APPAREL_SIZES.filter(
+            (size, index) => updatedCheckedState[index] && size
+          ),
+        };
+      });
+    }
   };
 
   const handleClick = (e) => {
@@ -96,7 +218,9 @@ const NewProduct = () => {
 
     const addProduct = async (product) => {
       try {
-        await userRequest.post("/products", product);
+        await userRequest
+          .post("/products", product)
+          .then(() => navigate("/products"));
       } catch (err) {}
     };
 
@@ -136,10 +260,7 @@ const NewProduct = () => {
         });
       }
     );
-    navigate("/products");
   };
-
-  console.log(inputs);
 
   return (
     <Container>
@@ -181,7 +302,7 @@ const NewProduct = () => {
         </NewProductItem>
         <NewProductItem>
           <NewProductLabel>Categories</NewProductLabel>
-          <NewProductSelect name="categories" onChange={handleChange}>
+          <NewProductSelect name="categories" onChange={handleCat}>
             <option value="top">Top</option>
             <option value="bottom">Bottom</option>
             <option value="shoes">Shoes</option>
@@ -189,13 +310,49 @@ const NewProduct = () => {
           </NewProductSelect>
         </NewProductItem>
         <NewProductItem>
-          <NewProductLabel>Size</NewProductLabel>
-          <NewProductInput
-            name="size"
-            type="text"
-            placeholder="S,M,L"
-            onChange={handleArray}
-          />
+          {inputs.categories !== "accessories" && (
+            <>
+              <NewProductLabel>Size</NewProductLabel>
+              <NewProductSizeSelectAllButton onClick={handleSelectAll}>
+                Select All
+              </NewProductSizeSelectAllButton>
+              <NewProductSizeContainer>
+                {inputs.categories === "shoes" &&
+                  SHOE_SIZES.map((eachSize, index) => (
+                    <NewProductCheckboxContainer>
+                      <NewProductCheckbox
+                        name="size"
+                        id={eachSize}
+                        value={eachSize}
+                        type="checkbox"
+                        checked={checkedState[index]}
+                        onClick={() => handleCheck(index)}
+                      />
+                      <NewProductCheckboxLabel>
+                        {eachSize}
+                      </NewProductCheckboxLabel>
+                    </NewProductCheckboxContainer>
+                  ))}
+                {(inputs.categories === "top" ||
+                  inputs.categories === "bottom") &&
+                  APPAREL_SIZES.map((eachSize, index) => (
+                    <NewProductCheckboxContainer>
+                      <NewProductCheckbox
+                        name="size"
+                        id={eachSize}
+                        value={eachSize}
+                        type="checkbox"
+                        checked={checkedState[index]}
+                        onClick={() => handleCheck(index)}
+                      />
+                      <NewProductCheckboxLabel>
+                        {eachSize}
+                      </NewProductCheckboxLabel>
+                    </NewProductCheckboxContainer>
+                  ))}
+              </NewProductSizeContainer>
+            </>
+          )}
         </NewProductItem>
 
         <NewProductItem>

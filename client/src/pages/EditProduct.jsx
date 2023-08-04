@@ -263,7 +263,9 @@ const EditProduct = () => {
 
   const updateProduct = async (product) => {
     try {
-      await userRequest.put(`/products/${productId}`, product);
+      await userRequest
+        .put(`/products/${productId}`, product)
+        .then(() => navigate(`/product/${productId}`));
     } catch (err) {}
   };
 
@@ -311,12 +313,10 @@ const EditProduct = () => {
           });
         }
       );
-      navigate(`/product/${productId}`);
     } else {
       const updatedProduct = { ...inputs, ...arrays };
       if (!Object.values(updatedProduct).some((el) => el === ""))
         updateProduct(updatedProduct);
-      navigate(`/product/${productId}`);
     }
   };
 

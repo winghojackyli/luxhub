@@ -1,9 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { publicRequest, userRequest } from "../requestMethods";
 
 const Container = styled.div`
-  margin: 10px;
+  margin: 20px;
   min-width: 300px;
   height: 550px;
   display: flex;
@@ -35,10 +37,65 @@ const ProdTitle = styled.li`
     color: #707070;
   }
 `;
+const ButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+`;
+const PostEditButton = styled.button`
+  width: 70px;
+  border: none;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #00224f;
+  color: white;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  display: ${(props) => (props.show ? "block" : "none")};
+`;
+const PostDeleteButton = styled.button`
+  width: 70px;
+  border: none;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #860000;
+  color: white;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  display: ${(props) => (props.show ? "block" : "none")};
+`;
 
-const Post = ({ img, products }) => {
+const Post = ({ id, img, products, update }) => {
+  const admin = useSelector((state) => state.currentUser?.isAdmin);
+  const navigate = useNavigate();
+
+  const handleEdit = (e) => {
+    e.preventDefault();
+    navigate(`/editPost/${id}`, { state: { id, img, products } });
+  };
+  const handleDelete = (e) => {
+    e.preventDefault();
+    const deletePost = async () => {
+      try {
+        await userRequest.delete(`/posts/${id}`);
+        const res = await publicRequest.get("posts");
+        update(res.data);
+      } catch (err) {}
+    };
+    deletePost();
+  };
   return (
     <Container>
+      <ButtonContainer>
+        <PostEditButton show={admin} onClick={handleEdit}>
+          Edit
+        </PostEditButton>
+        <PostDeleteButton show={admin} onClick={handleDelete}>
+          Delete
+        </PostDeleteButton>
+      </ButtonContainer>
       <Image src={img} />
       <Details>
         {products.map((product) => (

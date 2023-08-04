@@ -45,6 +45,7 @@ const NewPostInput = styled.input`
 
 const NewPostSelect = styled.select`
   height: 200px;
+  width: 60vh;
   border-radius: 5px;
 `;
 
@@ -85,7 +86,7 @@ const NewPost = () => {
     const getProducts = async () => {
       try {
         const res = await publicRequest.get("/products");
-        setProducts(res.data);
+        setProducts(res.data.sort((a, b) => a.title.localeCompare(b.title)));
       } catch (err) {}
     };
     getProducts();
@@ -99,7 +100,7 @@ const NewPost = () => {
 
     const addPost = async (post) => {
       try {
-        await userRequest.post("/posts", post);
+        await userRequest.post("/posts", post).then(() => navigate("/posts"));
       } catch (err) {}
     };
 
@@ -139,7 +140,6 @@ const NewPost = () => {
         });
       }
     );
-    navigate("/posts");
   };
 
   return (
