@@ -53,20 +53,24 @@ const Products = ({ filters, sort }) => {
   }, [products, filters]);
 
   useEffect(() => {
-    if (sort === "newest") {
+    if (sort === "latest") {
       setFilteredProducts((prev) =>
-        [...prev].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+        [...prev].sort(
+          (a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)
+        )
       );
-    } else if (sort === "hightolow") {
+    } else if (sort === "oldest") {
       setFilteredProducts((prev) =>
-        [...prev].sort((a, b) => b.price - a.price)
+        [...prev].sort(
+          (a, b) => new Date(a.releaseDate) - new Date(b.releaseDate)
+        )
       );
-    } else if (sort === "lowtohigh") {
+    } else if (sort === "popularity") {
       setFilteredProducts((prev) =>
-        [...prev].sort((a, b) => a.price - b.price)
+        [...prev].sort((a, b) => b.numSold - a.numSold)
       );
     }
-  }, [sort]);
+  }, [sort, filteredProducts]);
 
   return (
     <>

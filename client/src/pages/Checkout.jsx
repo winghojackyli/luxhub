@@ -234,9 +234,11 @@ const Checkout = () => {
                   <ProductId>
                     <b>ID:</b> {product._id}
                   </ProductId>
-                  <ProductSize>
-                    <b>Size:</b> {size}
-                  </ProductSize>
+                  {product.size?.length !== 0 && (
+                    <ProductSize>
+                      <b>Size:</b> {size}
+                    </ProductSize>
+                  )}
                 </Details>
               </ProductDetail>
             </Product>

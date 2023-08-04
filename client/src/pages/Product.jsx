@@ -9,6 +9,7 @@ import { publicRequest, userRequest } from "../requestMethods";
 import Chart from "../components/Chart";
 import BasicModal from "../components/BasicModal";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -52,6 +53,7 @@ const Details = styled.h4`
 const Price = styled.span`
   font-weight: 100;
   font-size: 35px;
+  margin-bottom: 10px;
 `;
 const FilterContainer = styled.div`
   width: 50%;
@@ -95,12 +97,26 @@ const Button = styled.button`
   }
 `;
 
+const ProductEditButton = styled.button`
+  width: 100px;
+  border: none;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #00004f;
+  color: white;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  display: ${(props) => (props.show ? "block" : "none")};
+`;
+
 const ChartContainer = styled.div`
   display: flex;
   flex-direction: row;
 `;
 
 const Product = () => {
+  const admin = useSelector((state) => state.currentUser?.isAdmin);
   const location = useLocation();
   const id = location.pathname.split("/")[2];
   const [product, setProduct] = useState({});
@@ -224,7 +240,6 @@ const Product = () => {
       navigate(`/sell/${id}?size=${size}&price=${bid}`);
     }
   };
-
   return (
     <Container>
       <Announcement />
@@ -233,6 +248,12 @@ const Product = () => {
           <Image src={product.img} />
         </ImgContainer>
         <InfoContainer>
+          <ProductEditButton
+            show={admin}
+            onClick={() => navigate(`/editProduct/${id}`, { state: product })}
+          >
+            Edit
+          </ProductEditButton>
           <Title>{product.title}</Title>
           <Description>{product.desc}</Description>
           <Details>
@@ -244,7 +265,49 @@ const Product = () => {
               <Details>Last Sale: $ {latestSalesPrice}</Details>
             )}
           </DetailsWrapper>
-          {size ? (
+          {product.size?.length !== 0 && (
+            <FilterContainer>
+              <Filter>
+                <FilterTitle>Size</FilterTitle>
+                <FilterSize onChange={(e) => setSize(e.target.value)}>
+                  <FilterSizeOption disabled selected></FilterSizeOption>
+                  {product.size?.map((s) => (
+                    <FilterSizeOption key={s}>{s}</FilterSizeOption>
+                  ))}
+                </FilterSize>
+              </Filter>
+            </FilterContainer>
+          )}
+          {product.size?.length !== 0 ? (
+            size ? (
+              <>
+                <PriceContainer>
+                  {bid ? (
+                    <Price>{"Highest Bid: $ " + bid}</Price>
+                  ) : (
+                    <Price>No Bid</Price>
+                  )}
+                  <Button onClick={() => handleClick("sell")} disabled={!size}>
+                    {bid ? `ASK or SELL FOR ${bid}` : `ASK`}
+                  </Button>
+                </PriceContainer>
+                <PriceContainer>
+                  {ask ? (
+                    <Price>{"Lowest Ask: $ " + ask}</Price>
+                  ) : (
+                    <Price>No Ask</Price>
+                  )}
+                  <Button onClick={() => handleClick("buy")} disabled={!size}>
+                    {ask ? `BID or BUY FOR ${ask}` : `BID`}
+                  </Button>
+                </PriceContainer>
+              </>
+            ) : (
+              <PriceContainer>
+                <Price>Select a size</Price>
+              </PriceContainer>
+            )
+          ) : (
             <>
               <PriceContainer>
                 {bid ? (
@@ -252,7 +315,7 @@ const Product = () => {
                 ) : (
                   <Price>No Bid</Price>
                 )}
-                <Button onClick={() => handleClick("sell")} disabled={!size}>
+                <Button onClick={() => handleClick("sell")}>
                   {bid ? `ASK or SELL FOR ${bid}` : `ASK`}
                 </Button>
               </PriceContainer>
@@ -262,27 +325,13 @@ const Product = () => {
                 ) : (
                   <Price>No Ask</Price>
                 )}
-                <Button onClick={() => handleClick("buy")} disabled={!size}>
+                <Button onClick={() => handleClick("buy")}>
                   {ask ? `BID or BUY FOR ${ask}` : `BID`}
                 </Button>
               </PriceContainer>
             </>
-          ) : (
-            <PriceContainer>
-              <Price>Select a size</Price>
-            </PriceContainer>
           )}
-          <FilterContainer>
-            <Filter>
-              <FilterTitle>Size</FilterTitle>
-              <FilterSize onChange={(e) => setSize(e.target.value)}>
-                <FilterSizeOption disabled selected></FilterSizeOption>
-                {product.size?.map((s) => (
-                  <FilterSizeOption key={s}>{s}</FilterSizeOption>
-                ))}
-              </FilterSize>
-            </Filter>
-          </FilterContainer>
+
           <Button
             onClick={() => {
               handleOpen("Bid");

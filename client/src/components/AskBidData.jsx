@@ -5,12 +5,6 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { Stack } from "@mui/material";
 
-const Container = styled.div`
-  height: 700px;
-  width: 100%;
-  padding: 50px;
-`;
-
 const AskBidData = ({ type }) => {
   const [tableData, setTableData] = useState([]);
   // type: Ask, Bid
@@ -26,7 +20,6 @@ const AskBidData = ({ type }) => {
         } else if (type === "Bid") {
           res = await axios.get(`http://localhost:5000/api/bids/find/${id}`);
         }
-        console.log(res.data);
         setTableData(res.data);
       } catch (err) {
         console.log(err);

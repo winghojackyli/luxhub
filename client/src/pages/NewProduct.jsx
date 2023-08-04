@@ -139,6 +139,8 @@ const NewProduct = () => {
     navigate("/products");
   };
 
+  console.log(inputs);
+
   return (
     <Container>
       <NewProductTitle>New Product</NewProductTitle>

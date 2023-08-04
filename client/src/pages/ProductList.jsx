@@ -5,7 +5,7 @@ import Products from "../components/Products";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Container = styled.div``;
@@ -29,7 +29,7 @@ const ProductAddButton = styled.button`
   width: 100px;
   border: none;
   padding: 10px;
-  margin-right: 30px;
+  margin-right: 40px;
   margin-left: auto;
   background-color: #00004f;
   color: white;
@@ -48,10 +48,11 @@ const Option = styled.option``;
 
 const ProductList = () => {
   const admin = useSelector((state) => state.currentUser?.isAdmin);
+  const navigate = useNavigate();
   const location = useLocation();
   const branding = location.pathname.split("/")[2];
   const [filters, setFilters] = useState(branding ? { brand: branding } : {});
-  const [sort, setSort] = useState("newest");
+  const [sort, setSort] = useState("latest");
 
   const handleFilters = (e) => {
     if (e.target.value !== "all") {
@@ -111,18 +112,16 @@ const ProductList = () => {
         <Filter>
           <FilterText>Sort Products:</FilterText>
           <Select onChange={(e) => setSort(e.target.value)}>
-            <Option value="newest">Newest</Option>
-            <Option value="hightolow">Price: Hight-Low</Option>
-            <Option value="lowtohigh">Price: Low-High</Option>
+            <Option value="latest">Latest</Option>
+            <Option value="oldest">Oldest</Option>
+            <Option value="popularity">Popularity</Option>
           </Select>
         </Filter>
       </FilterContainer>
-      <Link
-        to="/newProduct"
-        style={{ color: "inherit", textDecoration: "none" }}
-      >
-        <ProductAddButton show={admin}>Create</ProductAddButton>
-      </Link>
+
+      <ProductAddButton show={admin} onClick={() => navigate("/newProduct")}>
+        Create
+      </ProductAddButton>
       <Products filters={filters} sort={sort} />
       <Newsletter />
       <Footer />

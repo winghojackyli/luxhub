@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Post from "../components/Post";
 import { publicRequest } from "../requestMethods";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Container = styled.div``;
@@ -36,6 +36,8 @@ const PostAddButton = styled.button`
 
 const Styles = () => {
   const admin = useSelector((state) => state.currentUser?.isAdmin);
+  const navigate = useNavigate();
+
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -50,9 +52,9 @@ const Styles = () => {
   return (
     <Container>
       <Title>Styles</Title>
-      <Link to="/newPost" style={{ color: "inherit", textDecoration: "none" }}>
-        <PostAddButton show={admin}>Create</PostAddButton>
-      </Link>
+      <PostAddButton show={admin} onClick={() => navigate("/newPost")}>
+        Create
+      </PostAddButton>
       <PostContainer>
         {posts.map((post) => (
           <Post img={post.img} products={post.products} />

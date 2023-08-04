@@ -20,6 +20,7 @@ import SuccessAsk from "./pages/SuccessAsk";
 import SuccessOrder from "./pages/SuccessOrder";
 import NewProduct from "./pages/NewProduct";
 import NewPost from "./pages/NewPost";
+import EditProduct from "./pages/EditProduct";
 
 const App = () => {
   const user = useSelector((state) => state.currentUser);
@@ -47,6 +48,10 @@ const App = () => {
         <Route
           path="/newProduct"
           element={user?.isAdmin ? <NewProduct /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/editProduct/:id"
+          element={user?.isAdmin ? <EditProduct /> : <Navigate to="/" />}
         />
         <Route
           path="/newPost"
