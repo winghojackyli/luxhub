@@ -38,7 +38,9 @@ const Success = () => {
           address: stripeData.billing_details.address,
         });
         setBidId(res.data._id);
-      } catch (err) {}
+      } catch (err) {
+        console.log(err);
+      }
     };
     stripeData && createBid();
   }, [stripeData, currentUser, dispatch, productId, size]);

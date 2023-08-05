@@ -5,6 +5,7 @@ import { mobile } from "../responsive";
 import { publicRequest, userRequest } from "../requestMethods";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import ConfirmModal from "../components/ConfirmModal";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -125,6 +126,13 @@ const Sell = () => {
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.currentUser);
 
+  // Modal related
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => setOpen(false);
+
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -171,15 +179,7 @@ const Sell = () => {
     const makeAskRequest = async () => {
       try {
         if (highestBid && ask <= highestBid.price) {
-          const res = await userRequest.post("/orders", {
-            productId: id,
-            size,
-            price: highestBid.price,
-            seller: currentUser._id,
-            buyer: highestBid.userId,
-          });
-          await userRequest.delete("/bids/" + highestBid._id);
-          navigate("/successOrder", { state: res.data });
+          handleOpen();
         } else {
           const res = await userRequest.post("/asks", {
             productId: id,
@@ -257,6 +257,15 @@ const Sell = () => {
                 <CheckoutButton onClick={handleClick} disabled={!ask}>
                   PLACE ASK
                 </CheckoutButton>
+                <ConfirmModal
+                  open={open}
+                  handleClose={handleClose}
+                  bestPrice={price}
+                  bestBidAsk={highestBid}
+                  type={"Ask"}
+                  productId={id}
+                  size={size}
+                />
               </BidWrapper>
             )}
           </Summary>
