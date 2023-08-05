@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Typography, Modal, Box, Button } from "@material-ui/core";
 import { userRequest } from "../requestMethods";
 import { useSelector } from "react-redux";
@@ -15,11 +14,6 @@ export default function ConfirmModal({
 }) {
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.currentUser);
-  const [stripeToken, setStripeToken] = useState(null);
-
-  const onToken = (token) => {
-    setStripeToken(token);
-  };
 
   const confirmOrder = async () => {
     if (currentUser) {
