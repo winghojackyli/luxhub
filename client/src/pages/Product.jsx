@@ -265,7 +265,11 @@ const Product = () => {
           .then(() => navigate("/products"));
       } catch (err) {}
     };
-    deleteProduct();
+    if (window.confirm("Please confirm deletion of product")) {
+      deleteProduct().then(() => navigate("/products"));
+    } else {
+      return;
+    }
   };
   return (
     <Container>
