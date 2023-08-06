@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // order is created only when there is a successful match (Bid = Ask)
 const OrderSchema = new mongoose.Schema(
   {
     productId: { type: String, required: true },
     productName: { type: String, required: true },
-    size: { type: Number },
+    size: { type: String },
     price: { type: Number, required: true },
     buyer: { type: String, required: true },
     seller: { type: String, required: true },
@@ -13,4 +13,4 @@ const OrderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Order", OrderSchema);
+module.exports = mongoose.model('Order', OrderSchema);
