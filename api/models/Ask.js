@@ -1,15 +1,15 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // Ask is price offered by seller (how much the seller is willing to sell for the product)
 const AskSchema = new mongoose.Schema(
   {
     productId: { type: String, required: true },
     productName: { type: String, required: true },
-    size: { type: Number },
+    size: { type: String },
     price: { type: Number, required: true },
     userId: { type: String, required: true },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Ask", AskSchema);
+module.exports = mongoose.model('Ask', AskSchema);

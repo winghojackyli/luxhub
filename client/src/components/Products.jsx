@@ -70,7 +70,7 @@ const Products = ({ filters, sort }) => {
         [...prev].sort((a, b) => b.numSold - a.numSold)
       );
     }
-  }, [sort, filteredProducts]);
+  }, [sort]);
 
   return (
     <>

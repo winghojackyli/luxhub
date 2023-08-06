@@ -5,6 +5,7 @@ import { mobile } from '../responsive';
 import { publicRequest, userRequest } from '../requestMethods';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import ConfirmModal from '../components/ConfirmModal';
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -125,6 +126,13 @@ const Sell = () => {
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.currentUser);
 
+  // Modal related
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => setOpen(false);
+
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -173,7 +181,6 @@ const Sell = () => {
         if (highestBid && ask <= highestBid.price) {
           const res = await userRequest.post('/orders', {
             productId: id,
-            productName: product.title,
             size,
             price: highestBid.price,
             seller: currentUser._id,
@@ -259,6 +266,15 @@ const Sell = () => {
                 <CheckoutButton onClick={handleClick} disabled={!ask}>
                   PLACE ASK
                 </CheckoutButton>
+                <ConfirmModal
+                  open={open}
+                  handleClose={handleClose}
+                  bestPrice={price}
+                  bestBidAsk={highestBid}
+                  type={'Ask'}
+                  productId={id}
+                  size={size}
+                />
               </BidWrapper>
             )}
           </Summary>

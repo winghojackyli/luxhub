@@ -84,7 +84,11 @@ const Post = ({ id, img, products, update }) => {
         update(res.data);
       } catch (err) {}
     };
-    deletePost();
+    if (window.confirm("Please confirm deletion of product")) {
+      deletePost().then(() => navigate("/posts"));
+    } else {
+      return;
+    }
   };
   return (
     <Container>
