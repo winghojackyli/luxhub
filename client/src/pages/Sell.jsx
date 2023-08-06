@@ -181,6 +181,7 @@ const Sell = () => {
         if (highestBid && ask <= highestBid.price) {
           const res = await userRequest.post('/orders', {
             productId: id,
+            productName: product.title,
             size,
             price: highestBid.price,
             seller: currentUser._id,

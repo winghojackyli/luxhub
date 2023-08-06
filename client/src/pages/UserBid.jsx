@@ -21,19 +21,6 @@ const Title = styled.h1`
   font-size: 25px;
 `;
 
-const ListItem = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const ListImg = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 10px;
-`;
-
 const ListEditButton = styled.button`
   border: none;
   border-radius: 10px;
@@ -56,7 +43,7 @@ const UserBid = () => {
       } catch (err) {}
     };
     getBids();
-  }, []);
+  }, [user]);
 
   const handleDelete = (e) => {
     e.preventDefault();
@@ -69,8 +56,8 @@ const UserBid = () => {
   };
 
   const columns = [
-    { field: 'productId', headerName: 'Product ID', width: 220 },
-    { field: 'productName', headerName: 'Product', width: 400 },
+    { field: 'productId', headerName: 'Product ID', width: 250 },
+    { field: 'productName', headerName: 'Product', width: 450 },
     { field: 'size', headerName: 'Size', width: 200 },
     {
       field: 'price',
@@ -103,6 +90,7 @@ const UserBid = () => {
         <Title>Bid List</Title>
       </TitleContainer>
       <DataGrid
+        autoHeight={true}
         rows={bids}
         disableSelectionOnClick
         columns={columns}
