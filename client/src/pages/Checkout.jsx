@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import Announcement from "../components/Announcement";
-import { mobile } from "../responsive";
-import StripeCheckout from "react-stripe-checkout";
-import { publicRequest, userRequest } from "../requestMethods";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import Announcement from '../components/Announcement';
+import { mobile } from '../responsive';
+import StripeCheckout from 'react-stripe-checkout';
+import { publicRequest, userRequest } from '../requestMethods';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const KEY = process.env.REACT_APP_STRIPE;
 
 const Container = styled.div``;
 const Wrapper = styled.div`
   padding: 20px;
-  ${mobile({ padding: "10px" })}
+  ${mobile({ padding: '10px' })}
 `;
 const Bottom = styled.div`
   display: flex;
   justify-content: space-between;
-  ${mobile({ flexDirection: "column" })}
+  ${mobile({ flexDirection: 'column' })}
 `;
 const Info = styled.div`
   flex: 3;
@@ -25,7 +25,7 @@ const Info = styled.div`
 const Product = styled.div`
   display: flex;
   justify-content: space-between;
-  ${mobile({ flexDirection: "column" })}
+  ${mobile({ flexDirection: 'column' })}
 `;
 const ProductDetail = styled.div`
   flex: 2;
@@ -64,8 +64,8 @@ const SummaryItem = styled.div`
   margin: 30px 0px;
   display: flex;
   justify-content: space-between;
-  font-weight: ${(props) => props.type === "total" && "500"};
-  font-size: ${(props) => props.type === "total" && "24px"};
+  font-weight: ${(props) => props.type === 'total' && '500'};
+  font-size: ${(props) => props.type === 'total' && '24px'};
 `;
 const SummaryItemText = styled.span``;
 const SummaryItemPrice = styled.span``;
@@ -117,22 +117,22 @@ const Limit = styled.div`
 const Checkout = () => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const size = searchParams.get("size");
-  const price = searchParams.get("price");
-  const id = location.pathname.split("/")[2];
+  const size = searchParams.get('size');
+  const price = searchParams.get('price');
+  const id = location.pathname.split('/')[2];
   const [stripeToken, setStripeToken] = useState(null);
   const [product, setProduct] = useState({});
-  const [bid, setBid] = useState("");
-  const [lowestAsk, setLowestAsk] = useState("");
-  const [highestBid, setHighestBid] = useState("");
-  const [mode, setMode] = useState("bid");
+  const [bid, setBid] = useState('');
+  const [lowestAsk, setLowestAsk] = useState('');
+  const [highestBid, setHighestBid] = useState('');
+  const [mode, setMode] = useState('bid');
   const currentUser = useSelector((state) => state.currentUser);
   const navigate = useNavigate();
 
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const res = await publicRequest.get("/products/find/" + id);
+        const res = await publicRequest.get('/products/find/' + id);
         setProduct(res.data);
       } catch (err) {}
     };
@@ -141,8 +141,8 @@ const Checkout = () => {
 
   const onChangeMode = (mode) => {
     setMode(mode);
-    if (mode === "buy") setBid(price);
-    else setBid("");
+    if (mode === 'buy') setBid(price);
+    else setBid('');
   };
 
   const onToken = (token) => {
@@ -153,25 +153,26 @@ const Checkout = () => {
     const makeRequest = async () => {
       try {
         if (lowestAsk && bid >= lowestAsk.price) {
-          const res = await userRequest.post("/orders", {
+          const res = await userRequest.post('/orders', {
             productId: id,
+            productName: product.title,
             size,
             price: lowestAsk.price,
             seller: lowestAsk.userId,
             buyer: currentUser._id,
           });
-          await userRequest.delete("/asks/" + lowestAsk._id);
-          await userRequest.post("/checkout/payment", {
+          await userRequest.delete('/asks/' + lowestAsk._id);
+          await userRequest.post('/checkout/payment', {
             tokenId: stripeToken.id,
             amount: lowestAsk.price,
           });
-          navigate("/successOrder", { state: res.data });
+          navigate('/successOrder', { state: res.data });
         } else {
-          const res = await userRequest.post("/checkout/payment", {
+          const res = await userRequest.post('/checkout/payment', {
             tokenId: stripeToken.id,
-            amount: mode === "buy" ? price : bid,
+            amount: mode === 'buy' ? price : bid,
           });
-          navigate("/success", {
+          navigate('/success', {
             state: { stripeData: res.data, productId: id, size, lowestAsk },
           });
         }
@@ -188,6 +189,7 @@ const Checkout = () => {
     mode,
     lowestAsk,
     currentUser,
+    product,
   ]);
 
   useEffect(() => {
@@ -195,9 +197,9 @@ const Checkout = () => {
       if (size) {
         try {
           const res = await publicRequest.get(
-            "/bids/highestBid/" + id + "/" + size
+            '/bids/highestBid/' + id + '/' + size
           );
-          res.data ? setHighestBid(res.data.price) : setHighestBid("");
+          res.data ? setHighestBid(res.data.price) : setHighestBid('');
         } catch (err) {}
       }
     };
@@ -209,7 +211,7 @@ const Checkout = () => {
       if (size) {
         try {
           const res = await publicRequest.get(
-            "/asks/lowestAsk/" + id + "/" + size
+            '/asks/lowestAsk/' + id + '/' + size
           );
           setLowestAsk(res.data);
         } catch (err) {}
@@ -247,16 +249,16 @@ const Checkout = () => {
           <Summary>
             <SummaryTitle>ORDER</SummaryTitle>
             <ButtonContainer>
-              <Button onClick={() => onChangeMode("bid")}>PLACE BID</Button>
+              <Button onClick={() => onChangeMode('bid')}>PLACE BID</Button>
               <Button
-                onClick={() => onChangeMode("buy")}
-                disabled={price === ""}
+                onClick={() => onChangeMode('buy')}
+                disabled={price === ''}
               >
                 BUY NOW
               </Button>
             </ButtonContainer>
 
-            {mode === "buy" ? (
+            {mode === 'buy' ? (
               <>
                 <SummaryItem type="total">
                   <SummaryItemText>Total</SummaryItemText>

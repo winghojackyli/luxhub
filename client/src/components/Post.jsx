@@ -1,8 +1,8 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { publicRequest, userRequest } from "../requestMethods";
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import { publicRequest, userRequest } from '../requestMethods';
 
 const Container = styled.div`
   margin: 20px;
@@ -52,7 +52,7 @@ const PostEditButton = styled.button`
   border-radius: 5px;
   font-size: 14px;
   cursor: pointer;
-  display: ${(props) => (props.show ? "block" : "none")};
+  display: ${(props) => (props.show ? 'block' : 'none')};
 `;
 const PostDeleteButton = styled.button`
   width: 70px;
@@ -64,7 +64,7 @@ const PostDeleteButton = styled.button`
   border-radius: 5px;
   font-size: 14px;
   cursor: pointer;
-  display: ${(props) => (props.show ? "block" : "none")};
+  display: ${(props) => (props.show ? 'block' : 'none')};
 `;
 
 const Post = ({ id, img, products, update }) => {
@@ -80,7 +80,7 @@ const Post = ({ id, img, products, update }) => {
     const deletePost = async () => {
       try {
         await userRequest.delete(`/posts/${id}`);
-        const res = await publicRequest.get("posts");
+        const res = await publicRequest.get('posts');
         update(res.data);
       } catch (err) {}
     };
@@ -101,7 +101,7 @@ const Post = ({ id, img, products, update }) => {
         {products.map((product) => (
           <Link
             to={`/product/${product.productId}`}
-            style={{ color: "inherit", textDecoration: "none" }}
+            style={{ color: 'inherit', textDecoration: 'none' }}
           >
             <ProdTitle>{product.title}</ProdTitle>
           </Link>

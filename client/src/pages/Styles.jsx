@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Post from "../components/Post";
-import { publicRequest, userRequest } from "../requestMethods";
+import { publicRequest } from "../requestMethods";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 

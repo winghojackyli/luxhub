@@ -131,9 +131,23 @@ const Navbar = ({ user }) => {
             <MenuItem>STYLES</MenuItem>
           </Link>
           {user ? (
-            <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
-              <MenuItem onClick={handleLogout}>LOGOUT</MenuItem>
-            </Link>
+            <>
+              <Link
+                to={`/${user._id}/bids`}
+                style={{ color: "inherit", textDecoration: "none" }}
+              >
+                <MenuItem>VIEW BIDS</MenuItem>
+              </Link>
+              <Link
+                to={`/${user._id}/asks`}
+                style={{ color: "inherit", textDecoration: "none" }}
+              >
+                <MenuItem>VIEW ASKS</MenuItem>
+              </Link>
+              <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
+                <MenuItem onClick={handleLogout}>LOGOUT</MenuItem>
+              </Link>
+            </>
           ) : (
             <>
               <Link

@@ -1,13 +1,13 @@
-const router = require("express").Router();
-const Bid = require("../models/Bid");
+const router = require('express').Router();
+const Bid = require('../models/Bid');
 const {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
-} = require("./verifyToken");
+} = require('./verifyToken');
 
 //CREATE
-router.post("/", verifyToken, async (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
   const newBid = new Bid(req.body);
   try {
     const savedBid = await newBid.save();
@@ -18,17 +18,17 @@ router.post("/", verifyToken, async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", verifyToken, async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res) => {
   try {
     await Bid.findByIdAndDelete(req.params.id);
-    res.status(200).json("Bid has been deleted.");
+    res.status(200).json('Bid has been deleted.');
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
 //GET ALL BIDS
-router.get("/find/:productId", async (req, res) => {
+router.get('/find/:productId', async (req, res) => {
   try {
     const bids = await Bid.aggregate([
       {
@@ -38,7 +38,7 @@ router.get("/find/:productId", async (req, res) => {
       },
       {
         $group: {
-          _id: { size: "$size", price: "$price" },
+          _id: { size: '$size', price: '$price' },
           quantity: { $count: {} },
         },
       },
@@ -50,7 +50,7 @@ router.get("/find/:productId", async (req, res) => {
 });
 
 //GET USER BIDS
-router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
+router.get('/findUserBids/:userId', verifyToken, async (req, res) => {
   try {
     const bids = await Bid.find({ userId: req.params.userId });
     res.status(200).json(bids);
@@ -60,7 +60,7 @@ router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 //GET HIGHTEST BID
-router.get("/highestBid/:productId/:size", async (req, res) => {
+router.get('/highestBid/:productId/:size', async (req, res) => {
   try {
     const bids = await Bid.findOne({
       productId: req.params.productId,
