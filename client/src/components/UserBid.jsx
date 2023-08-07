@@ -4,6 +4,8 @@ import { DataGrid } from "@material-ui/data-grid";
 import { userRequest } from "../requestMethods";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Stack } from "@mui/material";
+import DeleteModal from "./DeleteModal";
 
 const Container = styled.div`
   padding: 20px;
@@ -36,6 +38,13 @@ const UserBid = () => {
   const user = useSelector((state) => state.currentUser);
   const [bids, setBids] = useState([]);
 
+  // Modal related
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => setOpen(false);
+
   useEffect(() => {
     const getBids = async () => {
       try {
@@ -45,17 +54,6 @@ const UserBid = () => {
     };
     getBids();
   }, [user]);
-
-  const handleDelete = (id) => {
-    const deleteBids = async () => {
-      try {
-        await userRequest.delete(`/bids/${id}`);
-        const res = await userRequest.get(`/bids/findUserBids/${user._id}`);
-        setBids(res.data);
-      } catch (err) {}
-    };
-    deleteBids();
-  };
 
   const columns = [
     { field: "productId", headerName: "Product ID", width: 250 },
@@ -76,12 +74,16 @@ const UserBid = () => {
             <Link to={"/product/" + params.row._id}>
               <ListEditButton mode={"edit"}>Edit</ListEditButton>
             </Link>
-            <ListEditButton
-              mode={"delete"}
-              onClick={() => handleDelete(params.row._id)}
-            >
+            <ListEditButton mode={"delete"} onClick={handleOpen}>
               Delete
             </ListEditButton>
+            <DeleteModal
+              open={open}
+              handleClose={handleClose}
+              itemId={params.row._id}
+              type="Bid"
+              reRender={setBids}
+            />
           </>
         );
       },
@@ -101,6 +103,20 @@ const UserBid = () => {
         getRowId={(row) => row._id}
         pageSize={10}
         checkboxSelection
+        components={{
+          NoRowsOverlay: () => {
+            return (
+              <Stack
+                height="100%"
+                alignItems="center"
+                justifyContent="center"
+                marginTop={10}
+              >
+                No Bid Record
+              </Stack>
+            );
+          },
+        }}
       />
     </Container>
   );

@@ -8,7 +8,6 @@ export default function ConfirmModal({
   open,
   bestPrice,
   bestBidAsk,
-
   productId,
   size,
 }) {
@@ -89,55 +88,3 @@ const style = {
     justifyContent: "space-around",
   },
 };
-
-/*
-
-sell
- const res = await userRequest.post("/orders", {
-            productId: id,
-            size,
-            price: highestBid.price,
-            seller: currentUser._id,
-            buyer: highestBid.userId,
-          });
-          await userRequest.delete("/bids/" + highestBid._id);
-          navigate("/successOrder", { state: res.data });
-
-*/
-
-/*
-
-
- {type === "Ask" ? (
-              <Button
-                variant="outlined"
-                size="medium"
-                sx={{ color: "black" }}
-                onClick={confirmOrder}
-              >
-                Confirm
-              </Button>
-            ) : (
-              <StripeCheckout
-                name="LuxHub"
-                image="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-                billingAddress
-                shippingAddress
-                description={`Your total is ${bestPrice}`}
-                amount={bestPrice * 100}
-                token={onToken}
-                stripeKey={KEY}
-                locale="en"
-              >
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  sx={{ color: "black" }}
-                  onClick={confirmOrder}
-                >
-                  Confirm
-                </Button>
-              </StripeCheckout>
-            )}
-
-*/

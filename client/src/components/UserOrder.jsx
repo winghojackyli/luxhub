@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { DataGrid } from "@material-ui/data-grid";
 import { userRequest } from "../requestMethods";
 import { useSelector } from "react-redux";
+import { Stack } from "@mui/material";
 
 const Container = styled.div`
   padding: 20px;
@@ -74,18 +75,46 @@ const UserBid = () => {
         getRowId={(row) => row._id}
         pageSize={10}
         checkboxSelection
+        components={{
+          NoRowsOverlay: () => {
+            return (
+              <Stack
+                height="100%"
+                alignItems="center"
+                justifyContent="center"
+                marginTop={10}
+              >
+                No Buy Record
+              </Stack>
+            );
+          },
+        }}
       />
       <TitleContainer>
         <Title>Selling Order List</Title>
       </TitleContainer>
       <DataGrid
-        autoHeight={true}
+        autoHeight
         rows={sellOrders}
         disableSelectionOnClick
         columns={columns}
         getRowId={(row) => row._id}
         pageSize={10}
         checkboxSelection
+        components={{
+          NoRowsOverlay: () => {
+            return (
+              <Stack
+                height="100%"
+                alignItems="center"
+                justifyContent="center"
+                marginTop={10}
+              >
+                No Sell Record
+              </Stack>
+            );
+          },
+        }}
       />
     </Container>
   );
