@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Stack } from "@mui/material";
 import DeleteModal from "./DeleteModal";
+import EditModal from "./EditModal";
 
 const Container = styled.div`
   padding: 20px;
@@ -38,12 +39,21 @@ const UserAsk = () => {
   const user = useSelector((state) => state.currentUser);
   const [asks, setAsks] = useState([]);
 
-  // Modal related
+  // Modal related (Delete Modal)
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
+
+  // Modal related (Edit Modal)
+  const [editModal, setEditModal] = useState(false);
+  const openEdit = () => {
+    setEditModal(true);
+  };
+  const closeEdit = () => {
+    setEditModal(false);
+  };
 
   useEffect(() => {
     const getAsks = async () => {
@@ -71,15 +81,23 @@ const UserAsk = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={"/product/" + params.row._id}>
-              <ListEditButton mode={"edit"}>Edit</ListEditButton>
-            </Link>
+            <ListEditButton mode={"edit"} onClick={openEdit}>
+              Edit
+            </ListEditButton>
+
             <ListEditButton mode={"delete"} onClick={handleOpen}>
               Delete
             </ListEditButton>
             <DeleteModal
               open={open}
               handleClose={handleClose}
+              itemId={params.row._id}
+              type="Ask"
+              reRender={setAsks}
+            />
+            <EditModal
+              open={editModal}
+              handleClose={closeEdit}
               itemId={params.row._id}
               type="Ask"
               reRender={setAsks}
