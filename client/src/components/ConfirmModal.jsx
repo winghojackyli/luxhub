@@ -16,23 +16,18 @@ export default function ConfirmModal({
   const currentUser = useSelector((state) => state.currentUser);
 
   const confirmOrder = async () => {
-    if (currentUser) {
-      try {
-        const res = await userRequest.post("/orders", {
-          productId,
-          size,
-          price: bestBidAsk.price,
-          seller: currentUser._id,
-          buyer: bestBidAsk.userId,
-        });
-        await userRequest.delete("/bids/" + bestBidAsk._id);
-        navigate("/successOrder", { state: res.data });
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      alert("Please log in to proceed");
-      navigate("/login");
+    try {
+      const res = await userRequest.post("/orders", {
+        productId,
+        size,
+        price: bestBidAsk.price,
+        seller: currentUser._id,
+        buyer: bestBidAsk.userId,
+      });
+      await userRequest.delete("/bids/" + bestBidAsk._id);
+      navigate("/successOrder", { state: res.data });
+    } catch (err) {
+      console.log(err);
     }
   };
 
