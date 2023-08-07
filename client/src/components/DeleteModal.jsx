@@ -1,33 +1,30 @@
-import { Typography, Modal, Box, Button } from "@material-ui/core";
+import React from "react";
+import Button from "@mui/material/Button";
+import { Typography, Modal, Box } from "@material-ui/core";
 import { userRequest } from "../requestMethods";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
-export default function ConfirmModal({
-  handleClose,
-  open,
-  bestPrice,
-  bestBidAsk,
-  productId,
-  size,
-}) {
-  const navigate = useNavigate();
-  const currentUser = useSelector((state) => state.currentUser);
+const DeleteModal = ({ itemId, open, handleClose, type, reRender }) => {
+  const user = useSelector((state) => state.currentUser);
 
-  const confirmOrder = async () => {
-    try {
-      const res = await userRequest.post("/orders", {
-        productId,
-        size,
-        price: bestBidAsk.price,
-        seller: currentUser._id,
-        buyer: bestBidAsk.userId,
-      });
-      await userRequest.delete("/bids/" + bestBidAsk._id);
-      navigate("/successOrder", { state: res.data });
-    } catch (err) {
-      console.log(err);
-    }
+  const handleDelete = () => {
+    const deleteAskBid = async () => {
+      try {
+        if (type === "Ask") {
+          await userRequest.delete(`/asks/${itemId}`);
+          const res = await userRequest.get(`/asks/findUserAsks/${user._id}`);
+          reRender(res.data);
+        } else if (type === "Bid") {
+          await userRequest.delete(`/bids/${itemId}`);
+          const res = await userRequest.get(`/bids/findUserBids/${user._id}`);
+          reRender(res.data);
+        }
+        handleClose();
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    deleteAskBid();
   };
 
   return (
@@ -35,17 +32,16 @@ export default function ConfirmModal({
       <Modal open={open} onClose={handleClose}>
         <Box sx={style.modalWrapper}>
           <Typography sx={{ fontFamily: "Urbanist" }}>
-            The Highest Bid now is ${bestPrice}, will you take this offer and
-            sell at ${bestPrice}?
+            Are you sure you want to delete this {type}?
           </Typography>
           <Box sx={style.btnWrapper}>
             <Button
-              variant="outlined"
+              variant="contained"
+              color="error"
               size="medium"
-              sx={{ color: "black" }}
-              onClick={confirmOrder}
+              onClick={handleDelete}
             >
-              Confirm
+              Delete
             </Button>
 
             <Button
@@ -61,7 +57,7 @@ export default function ConfirmModal({
       </Modal>
     </div>
   );
-}
+};
 
 /** @type {import("@mui/material").SxProps} */
 const style = {
@@ -88,3 +84,5 @@ const style = {
     justifyContent: "space-around",
   },
 };
+
+export default DeleteModal;

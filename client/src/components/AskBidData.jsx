@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { Stack } from "@mui/material";

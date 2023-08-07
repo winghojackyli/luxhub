@@ -294,19 +294,32 @@ const Checkout = () => {
                   onChange={(e) => setBid(e.target.value)}
                 />
                 <Limit>A minimum bid value of $100 is required</Limit>
-                <StripeCheckout
-                  name="LuxHub"
-                  image="https://i.ibb.co/rpPZJH6/logo.png"
-                  billingAddress
-                  shippingAddress
-                  description={`Tour total is ${bid}`}
-                  amount={bid * 100}
-                  token={onToken}
-                  stripeKey={KEY}
-                  locale="en"
-                >
-                  <CheckoutButton disabled={!bid}>PLACE BID</CheckoutButton>
-                </StripeCheckout>
+
+                {currentUser ? (
+                  <StripeCheckout
+                    name="LuxHub"
+                    image="https://i.ibb.co/rpPZJH6/logo.png"
+                    billingAddress
+                    shippingAddress
+                    description={`Tour total is ${bid}`}
+                    amount={bid * 100}
+                    token={onToken}
+                    stripeKey={KEY}
+                    locale="en"
+                  >
+                    <CheckoutButton disabled={!bid}>PLACE BID</CheckoutButton>
+                  </StripeCheckout>
+                ) : (
+                  <CheckoutButton
+                    disabled={!bid}
+                    onClick={() => {
+                      alert("Please Login to proceed");
+                      navigate("/login");
+                    }}
+                  >
+                    PLACE BID
+                  </CheckoutButton>
+                )}
               </BidWrapper>
             )}
           </Summary>

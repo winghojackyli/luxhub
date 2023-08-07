@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import Announcement from '../components/Announcement';
-import { mobile } from '../responsive';
-import { publicRequest, userRequest } from '../requestMethods';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import ConfirmModal from '../components/ConfirmModal';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import Announcement from "../components/Announcement";
+import { mobile } from "../responsive";
+import { publicRequest, userRequest } from "../requestMethods";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import ConfirmModal from "../components/ConfirmModal";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
   padding: 20px;
-  ${mobile({ padding: '10px' })}
+  ${mobile({ padding: "10px" })}
 `;
 const Bottom = styled.div`
   display: flex;
   justify-content: space-between;
-  ${mobile({ flexDirection: 'column' })}
+  ${mobile({ flexDirection: "column" })}
 `;
 const Info = styled.div`
   flex: 3;
@@ -23,7 +23,7 @@ const Info = styled.div`
 const Product = styled.div`
   display: flex;
   justify-content: space-between;
-  ${mobile({ flexDirection: 'column' })}
+  ${mobile({ flexDirection: "column" })}
 `;
 const ProductDetail = styled.div`
   flex: 2;
@@ -62,8 +62,8 @@ const SummaryItem = styled.div`
   margin: 30px 0px;
   display: flex;
   justify-content: space-between;
-  font-weight: ${(props) => props.type === 'total' && '500'};
-  font-size: ${(props) => props.type === 'total' && '24px'};
+  font-weight: ${(props) => props.type === "total" && "500"};
+  font-size: ${(props) => props.type === "total" && "24px"};
 `;
 const SummaryItemText = styled.span``;
 const SummaryItemPrice = styled.span``;
@@ -115,14 +115,14 @@ const Limit = styled.div`
 const Sell = () => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const size = searchParams.get('size');
-  const price = searchParams.get('price');
-  const id = location.pathname.split('/')[2];
+  const size = searchParams.get("size");
+  const price = searchParams.get("price");
+  const id = location.pathname.split("/")[2];
   const [product, setProduct] = useState({});
-  const [ask, setAsk] = useState('');
-  const [lowestAsk, setLowestAsk] = useState('');
-  const [highestBid, setHighestBid] = useState('');
-  const [mode, setMode] = useState('ask');
+  const [ask, setAsk] = useState("");
+  const [lowestAsk, setLowestAsk] = useState("");
+  const [highestBid, setHighestBid] = useState("");
+  const [mode, setMode] = useState("ask");
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.currentUser);
 
@@ -136,7 +136,7 @@ const Sell = () => {
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const res = await publicRequest.get('/products/find/' + id);
+        const res = await publicRequest.get("/products/find/" + id);
         setProduct(res.data);
       } catch (err) {}
     };
@@ -152,9 +152,9 @@ const Sell = () => {
       if (size) {
         try {
           const res = await publicRequest.get(
-            '/asks/lowestAsk/' + id + '/' + size
+            "/asks/lowestAsk/" + id + "/" + size
           );
-          res.data ? setLowestAsk(res.data.price) : setLowestAsk('');
+          res.data ? setLowestAsk(res.data.price) : setLowestAsk("");
         } catch (err) {}
       }
     };
@@ -166,7 +166,7 @@ const Sell = () => {
       if (size) {
         try {
           const res = await publicRequest.get(
-            '/bids/highestBid/' + id + '/' + size
+            "/bids/highestBid/" + id + "/" + size
           );
           setHighestBid(res.data);
         } catch (err) {}
@@ -177,29 +177,25 @@ const Sell = () => {
 
   const handleClick = () => {
     const makeAskRequest = async () => {
-      try {
-        if (highestBid && ask <= highestBid.price) {
-          const res = await userRequest.post('/orders', {
-            productId: id,
-            productName: product.title,
-            size,
-            price: highestBid.price,
-            seller: currentUser._id,
-            buyer: highestBid.userId,
-          });
-          await userRequest.delete('/bids/' + highestBid._id);
-          navigate('/successOrder', { state: res.data });
-        } else {
-          const res = await userRequest.post('/asks', {
-            productId: id,
-            productName: product.title,
-            size,
-            price: mode === 'sell' ? price : ask,
-            userId: currentUser._id,
-          });
-          navigate('/successAsk', { state: res.data });
-        }
-      } catch (err) {}
+      if (currentUser) {
+        try {
+          if (highestBid && ask <= highestBid.price) {
+            handleOpen();
+          } else {
+            const res = await userRequest.post("/asks", {
+              productId: id,
+              productName: product.title,
+              size,
+              price: mode === "sell" ? price : ask,
+              userId: currentUser._id,
+            });
+            navigate("/successAsk", { state: res.data });
+          }
+        } catch (err) {}
+      } else {
+        alert("Please Login to proceed");
+        navigate("/login");
+      }
     };
     makeAskRequest();
   };
@@ -233,16 +229,16 @@ const Sell = () => {
           <Summary>
             <SummaryTitle>ORDER</SummaryTitle>
             <ButtonContainer>
-              <Button onClick={() => onChangeMode('ask')}>PLACE ASK</Button>
+              <Button onClick={() => onChangeMode("ask")}>PLACE ASK</Button>
               <Button
-                onClick={() => onChangeMode('sell')}
-                disabled={price === ''}
+                onClick={() => onChangeMode("sell")}
+                disabled={price === ""}
               >
                 SELL NOW
               </Button>
             </ButtonContainer>
 
-            {mode === 'sell' ? (
+            {mode === "sell" ? (
               <>
                 <SummaryItem type="total">
                   <SummaryItemText>Total</SummaryItemText>
@@ -272,7 +268,7 @@ const Sell = () => {
                   handleClose={handleClose}
                   bestPrice={price}
                   bestBidAsk={highestBid}
-                  type={'Ask'}
+                  type={"Ask"}
                   productId={id}
                   size={size}
                 />
