@@ -133,16 +133,10 @@ const Navbar = ({ user }) => {
           {user ? (
             <>
               <Link
-                to={`/${user._id}/bids`}
+                to={`/${user._id}`}
                 style={{ color: "inherit", textDecoration: "none" }}
               >
-                <MenuItem>VIEW BIDS</MenuItem>
-              </Link>
-              <Link
-                to={`/${user._id}/asks`}
-                style={{ color: "inherit", textDecoration: "none" }}
-              >
-                <MenuItem>VIEW ASKS</MenuItem>
+                <MenuItem>PROFILE</MenuItem>
               </Link>
               <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
                 <MenuItem onClick={handleLogout}>LOGOUT</MenuItem>

@@ -43,10 +43,20 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
-//GET USER ORDERS
-router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
+//GET USER BUY ORDERS
+router.get("/findUserBuyOrders/:userId", verifyToken, async (req, res) => {
   try {
-    const orders = await Order.find({ userId: req.params.userId });
+    const orders = await Order.find({ buyer: req.params.userId });
+    res.status(200).json(orders);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//GET USER SELL ORDERS
+router.get("/findUserSellOrders/:userId", verifyToken, async (req, res) => {
+  try {
+    const orders = await Order.find({ seller: req.params.userId });
     res.status(200).json(orders);
   } catch (err) {
     res.status(500).json(err);

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { DataGrid } from '@material-ui/data-grid';
-import { DeleteOutline } from '@material-ui/icons';
-import { userRequest } from '../requestMethods';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { DataGrid } from "@material-ui/data-grid";
+import { userRequest } from "../requestMethods";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   padding: 20px;
@@ -22,10 +21,12 @@ const Title = styled.h1`
 `;
 
 const ListEditButton = styled.button`
+  width: 60px;
   border: none;
   border-radius: 10px;
-  padding: 5px 10px;
-  background-color: #00224f;
+  padding: 8px 10px;
+  background-color: ${(props) =>
+    props.mode === "edit" ? "#00224f" : "#860000"};
   color: white;
   cursor: pointer;
   margin-right: 20px;
@@ -45,39 +46,42 @@ const UserBid = () => {
     getBids();
   }, [user]);
 
-  const handleDelete = (e) => {
-    e.preventDefault();
+  const handleDelete = (id) => {
     const deleteBids = async () => {
       try {
-        await userRequest.delete(`/bids`); //missing bid id
+        await userRequest.delete(`/bids/${id}`);
+        const res = await userRequest.get(`/bids/findUserBids/${user._id}`);
+        setBids(res.data);
       } catch (err) {}
     };
     deleteBids();
   };
 
   const columns = [
-    { field: 'productId', headerName: 'Product ID', width: 250 },
-    { field: 'productName', headerName: 'Product', width: 450 },
-    { field: 'size', headerName: 'Size', width: 200 },
+    { field: "productId", headerName: "Product ID", width: 250 },
+    { field: "productName", headerName: "Product", width: 450 },
+    { field: "size", headerName: "Size", width: 200 },
     {
-      field: 'price',
-      headerName: 'Bid Price',
+      field: "price",
+      headerName: "Bid Price",
       width: 160,
     },
     {
-      field: 'action',
-      headerName: 'Action',
+      field: "action",
+      headerName: "Action",
       width: 200,
       renderCell: (params) => {
         return (
           <>
-            <Link to={'/product/' + params.row._id}>
-              <ListEditButton>Edit</ListEditButton>
+            <Link to={"/product/" + params.row._id}>
+              <ListEditButton mode={"edit"}>Edit</ListEditButton>
             </Link>
-            <DeleteOutline
-              style={{ color: 'red', cursor: 'pointer' }}
+            <ListEditButton
+              mode={"delete"}
               onClick={() => handleDelete(params.row._id)}
-            />
+            >
+              Delete
+            </ListEditButton>
           </>
         );
       },

@@ -22,8 +22,7 @@ import NewProduct from "./pages/NewProduct";
 import NewPost from "./pages/NewPost";
 import EditProduct from "./pages/EditProduct";
 import EditPost from "./pages/EditPost";
-import UserBid from "./pages/UserBid";
-import UserAsk from "./pages/UserAsk";
+import Profile from "./pages/Profile";
 
 const App = () => {
   const user = useSelector((state) => state.currentUser);
@@ -65,12 +64,8 @@ const App = () => {
           element={user?.isAdmin ? <EditPost /> : <Navigate to="/" />}
         />
         <Route
-          path="/:userId/bids"
-          element={!user ? <Navigate to="/" /> : <UserBid />}
-        />
-        <Route
-          path="/:userId/asks"
-          element={!user ? <Navigate to="/" /> : <UserAsk />}
+          path="/:userId"
+          element={!user ? <Navigate to="/" /> : <Profile />}
         />
       </Routes>
     </Router>

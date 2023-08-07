@@ -30,4 +30,9 @@ export const store = configureStore({
     }),
 });
 
+export const resetStore = async () => {
+  await persistor.purge();
+  await persistor.flush();
+};
+
 export let persistor = persistStore(store);

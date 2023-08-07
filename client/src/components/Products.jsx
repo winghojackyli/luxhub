@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import styled from "styled-components";
 import { useSearchParams } from "react-router-dom";
 import ProductItem from "./ProductItem";
+import { publicRequest } from "../requestMethods";
 
 const Container = styled.div`
   padding: 20px;
@@ -26,15 +26,15 @@ const Products = ({ filters, sort }) => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        let res;
         if (qSearch) {
-          res = await axios.get(
-            "http://localhost:5000/api/products/find?search=" + qSearch
+          const res = await publicRequest.get(
+            "/products/find?search=" + qSearch
           );
+          setProducts(res.data);
         } else {
-          res = await axios.get("http://localhost:5000/api/products");
+          const res = await publicRequest.get("/products");
+          setProducts(res.data);
         }
-        setProducts(res.data);
       } catch (err) {}
     };
     getProducts();
@@ -47,6 +47,11 @@ const Products = ({ filters, sort }) => {
           Object.entries(filters).every(([key, value]) =>
             item[key].includes(value)
           )
+        )
+      );
+      setFilteredProducts((prev) =>
+        [...prev].sort(
+          (a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)
         )
       );
     }
@@ -71,7 +76,6 @@ const Products = ({ filters, sort }) => {
       );
     }
   }, [sort]);
-
   return (
     <>
       {qSearch && (

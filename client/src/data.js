@@ -5,21 +5,24 @@ export const sliderItems = [
     title: "MARC JACOBS",
     desc: "Marc Jacobs Tote Bags for Summer",
     bg: "dbdad6",
+    url: "/product/64cd4843d8c331dc06d94c28",
   },
   {
     id: 2,
-    img: "https://i.ibb.co/DCxSdN8/summer.png",
+    img: "https://i.ibb.co/Xz9w26t/nike.png",
     title: "SUMMER",
-    desc: "Show Off Your Kicks In Summer Time",
+    desc: "Show Off Your Nike Kicks In Summer Time",
     bg: "f5fafd",
+    url: "/products/nike",
   },
 
   {
     id: 3,
-    img: "https://i.ibb.co/WcLmrs8/LV.png",
-    title: "LOUIS VUITTON",
-    desc: "Modern Classic Silhouettes",
-    bg: "c6c6c4",
+    img: "https://i.ibb.co/VjB715J/supreme.png",
+    title: "Supreme",
+    desc: "Supreme SS23 Release",
+    bg: "f5f5f5",
+    url: "/products/supreme",
   },
 ];
 export const brands = [

@@ -1,13 +1,13 @@
-const router = require("express").Router();
-const Ask = require("../models/Ask");
+const router = require('express').Router();
+const Ask = require('../models/Ask');
 const {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
-} = require("./verifyToken");
+} = require('./verifyToken');
 
 //CREATE
-router.post("/", verifyToken, async (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
   const newAsk = new Ask(req.body);
   try {
     const savedAsk = await newAsk.save();
@@ -18,17 +18,17 @@ router.post("/", verifyToken, async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", verifyToken, async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res) => {
   try {
     await Ask.findByIdAndDelete(req.params.id);
-    res.status(200).json("Ask has been deleted.");
+    res.status(200).json('Ask has been deleted.');
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
 //GET ALL ASKS
-router.get("/find/:productId", async (req, res) => {
+router.get('/find/:productId', async (req, res) => {
   try {
     const asks = await Ask.aggregate([
       {
@@ -39,7 +39,7 @@ router.get("/find/:productId", async (req, res) => {
 
       {
         $group: {
-          _id: { size: "$size", price: "$price" },
+          _id: { size: '$size', price: '$price' },
           quantity: { $count: {} },
         },
       },
@@ -51,7 +51,7 @@ router.get("/find/:productId", async (req, res) => {
 });
 
 //GET USER ASKS
-router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
+router.get('/findUserAsks/:userId', verifyToken, async (req, res) => {
   try {
     const asks = await Ask.find({ userId: req.params.userId });
     res.status(200).json(asks);
@@ -61,7 +61,7 @@ router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 //GET LOWEST ASK
-router.get("/lowestAsk/:productId/:size", async (req, res) => {
+router.get('/lowestAsk/:productId/:size', async (req, res) => {
   try {
     const asks = await Ask.findOne({
       productId: req.params.productId,

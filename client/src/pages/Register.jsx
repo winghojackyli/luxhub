@@ -70,7 +70,7 @@ const Register = () => {
     e.preventDefault();
     if (password === confirmPassword) {
       try {
-        const res = await publicRequest.post("/auth/register", {
+        await publicRequest.post("/auth/register", {
           fname,
           lname,
           username,
