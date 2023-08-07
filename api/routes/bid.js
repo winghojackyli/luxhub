@@ -37,6 +37,22 @@ router.delete("/:id", verifyToken, async (req, res) => {
   }
 });
 
+//UPDATE
+router.put("/:id", verifyToken, async (req, res) => {
+  try {
+    const updatedBid = await Bid.findByIdAndUpdate(
+      req.params.id,
+      {
+        price: req.body.newPrice,
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedBid);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //GET PRODUCT BIDS
 router.get("/find/:productId", async (req, res) => {
   try {

@@ -1,28 +1,34 @@
-import React from "react";
+import { useState } from "react";
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import { Typography, Modal, Box } from "@material-ui/core";
 import { userRequest } from "../requestMethods";
 import { useSelector } from "react-redux";
 
-const DeleteModal = ({ itemId, open, handleClose, type, reRender }) => {
+const EditModal = ({ open, handleClose, type, reRender, itemId }) => {
   const user = useSelector((state) => state.currentUser);
+  const [newPrice, setNewPrice] = useState();
 
-  const handleDelete = () => {
-    const deleteAskBid = async () => {
+  const handleEdit = () => {
+    const editAskBid = async () => {
       try {
         if (type === "Ask") {
-          await userRequest.delete(`/asks/${itemId}`);
+          console.log(typeof newPrice);
+          await userRequest.put(`/asks/${itemId}`, { newPrice });
           const res = await userRequest.get(`/asks/findUserAsks/${user._id}`);
           reRender(res.data);
         } else if (type === "Bid") {
-          //////////// Update Bid Logic Here //////////////////
+          await userRequest.put(`/bids/${itemId}`, { newPrice });
+          const res = await userRequest.get(`/bids/findUserBids/${user._id}`);
+          reRender(res.data);
         }
+
         handleClose();
       } catch (err) {
         console.log(err);
       }
     };
-    deleteAskBid();
+    editAskBid();
   };
 
   return (
@@ -30,16 +36,21 @@ const DeleteModal = ({ itemId, open, handleClose, type, reRender }) => {
       <Modal open={open} onClose={handleClose}>
         <Box sx={style.modalWrapper}>
           <Typography sx={{ fontFamily: "Urbanist" }}>
-            Are you sure you want to delete this {type}?
+            Please enter the new {type} price:
           </Typography>
+          <TextField
+            type="number"
+            placeholder={`New ${type} Price...`}
+            size="lg"
+            sx={{ mt: 2 }}
+            value={newPrice}
+            onChange={(event) => {
+              setNewPrice(event.target.value);
+            }}
+          />
           <Box sx={style.btnWrapper}>
-            <Button
-              variant="contained"
-              color="error"
-              size="medium"
-              onClick={handleDelete}
-            >
-              Delete
+            <Button variant="contained" size="medium" onClick={handleEdit}>
+              Edit
             </Button>
 
             <Button
@@ -83,4 +94,4 @@ const style = {
   },
 };
 
-export default DeleteModal;
+export default EditModal;
