@@ -12,10 +12,12 @@ const DeleteModal = ({ itemId, open, handleClose, type, reRender }) => {
       try {
         if (type === "Ask") {
           await userRequest.delete(`/asks/${itemId}`);
-          const res = await userRequest.get(`/asks/findUserAsks/${user._id}`);
+          const res = await userRequest.get(`/asks/findUserBids/${user._id}`);
           reRender(res.data);
         } else if (type === "Bid") {
-          //////////// Update Bid Logic Here //////////////////
+          await userRequest.delete(`/bids/${itemId}`);
+          const res = await userRequest.get(`/bids/findUserBids/${user._id}`);
+          reRender(res.data);
         }
         handleClose();
       } catch (err) {

@@ -25,7 +25,7 @@ const AskBidData = ({ type }) => {
       }
     };
     getAskBid();
-  }, []);
+  }, [id, type]);
 
   const columns = [
     {

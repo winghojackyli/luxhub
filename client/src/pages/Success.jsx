@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { publicRequest, userRequest } from '../requestMethods';
-import styled from 'styled-components';
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { publicRequest, userRequest } from "../requestMethods";
+import styled from "styled-components";
 
 const Container = styled.div`
   height: 100vh;
@@ -31,7 +31,7 @@ const Success = () => {
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const res = await publicRequest.get('/products/find/' + productId);
+        const res = await publicRequest.get("/products/find/" + productId);
         setProduct(res.data);
       } catch (err) {}
     };
@@ -41,12 +41,12 @@ const Success = () => {
   useEffect(() => {
     const createBid = async () => {
       try {
-        const res = await userRequest.post('/bids', {
+        const res = await userRequest.post("/bids", {
           userId: currentUser._id,
           productId,
           productName: product.title,
           size,
-          price: stripeData.amount,
+          price: stripeData.amount / 100,
           address: stripeData.billing_details.address,
         });
         setBidId(res.data._id);

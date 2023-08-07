@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // Ask is price offered by seller (how much the seller is willing to sell for the product)
 const AskSchema = new mongoose.Schema(
@@ -12,4 +12,4 @@ const AskSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Ask', AskSchema);
+module.exports = mongoose.model("Ask", AskSchema);

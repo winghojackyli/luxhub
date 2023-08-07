@@ -1,13 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { Typography, Modal, Box } from "@material-ui/core";
 import { userRequest } from "../requestMethods";
 import { useSelector } from "react-redux";
+import StripeCheckout from "react-stripe-checkout";
+
+const KEY = process.env.REACT_APP_STRIPE;
 
 const EditModal = ({ open, handleClose, type, reRender, itemId }) => {
   const user = useSelector((state) => state.currentUser);
   const [newPrice, setNewPrice] = useState();
+  const [stripeToken, setStripeToken] = useState(null);
+
+  const onToken = (token) => {
+    setStripeToken(token);
+  };
+
+  useEffect(() => {
+    const makeRequest = async () => {
+      try {
+        await userRequest.put(`/bids/${itemId}`, { newPrice });
+        const res = await userRequest.get(`/bids/findUserBids/${user._id}`);
+        reRender(res.data);
+        await userRequest.post("/checkout/payment", {
+          tokenId: stripeToken.id,
+          amount: newPrice,
+        });
+      } catch (err) {}
+    };
+    stripeToken && makeRequest();
+  }, [itemId, newPrice, reRender, stripeToken, user._id]);
 
   const handleEdit = () => {
     const editAskBid = async () => {
@@ -16,10 +39,6 @@ const EditModal = ({ open, handleClose, type, reRender, itemId }) => {
           console.log(typeof newPrice);
           await userRequest.put(`/asks/${itemId}`, { newPrice });
           const res = await userRequest.get(`/asks/findUserAsks/${user._id}`);
-          reRender(res.data);
-        } else if (type === "Bid") {
-          await userRequest.put(`/bids/${itemId}`, { newPrice });
-          const res = await userRequest.get(`/bids/findUserBids/${user._id}`);
           reRender(res.data);
         }
 
@@ -49,9 +68,27 @@ const EditModal = ({ open, handleClose, type, reRender, itemId }) => {
             }}
           />
           <Box sx={style.btnWrapper}>
-            <Button variant="contained" size="medium" onClick={handleEdit}>
-              Edit
-            </Button>
+            {type === "Bid" ? (
+              <StripeCheckout
+                name="LuxHub"
+                image="https://i.ibb.co/rpPZJH6/logo.png"
+                billingAddress
+                shippingAddress
+                description={`Tour total is ${newPrice}`}
+                amount={newPrice}
+                token={onToken}
+                stripeKey={KEY}
+                locale="en"
+              >
+                <Button variant="contained" size="medium" onClick={handleEdit}>
+                  Confirm
+                </Button>
+              </StripeCheckout>
+            ) : (
+              <Button variant="contained" size="medium" onClick={handleEdit}>
+                Confirm
+              </Button>
+            )}
 
             <Button
               variant="outlined"

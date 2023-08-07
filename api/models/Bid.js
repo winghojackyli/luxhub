@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // Bid is price offered by buyer (how much the buyer is willing to pay for the product)
 const BidSchema = new mongoose.Schema(
@@ -12,4 +12,4 @@ const BidSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Bid', BidSchema);
+module.exports = mongoose.model("Bid", BidSchema);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { updateState, updateUser } from "../redux/apiCalls";
+import { updateState } from "../redux/apiCalls";
 import { userRequest } from "../requestMethods";
 import { useLocation, useNavigate } from "react-router-dom";
 

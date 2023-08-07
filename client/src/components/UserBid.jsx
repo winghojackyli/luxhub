@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { DataGrid } from "@material-ui/data-grid";
 import { userRequest } from "../requestMethods";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Stack } from "@mui/material";
 import DeleteModal from "./DeleteModal";
@@ -99,7 +98,7 @@ const UserBid = () => {
               open={editModal}
               handleClose={closeEdit}
               itemId={params.row._id}
-              type="Ask"
+              type="Bid"
               reRender={setBids}
             />
           </>
