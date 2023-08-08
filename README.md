@@ -15,8 +15,7 @@ Check out the live demo of LuxHub: [LuxHub Demo](https://luxhub.onrender.com/)
 - [Usage](#usage)
 - [Features](#features)
 - [Screenshots](#screenshots)
-- [Contributing](#contributing)
-- [License](#license)
+
 
 ## Installation
 
