@@ -47,15 +47,25 @@ const Button = styled.button`
   align-items: center;
   cursor: pointer;
 `;
+const Message = styled.div`
+  font-size: 15px;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 15px;
+`;
 
 const Newsletter = () => {
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSend = () => {
     const makeRequest = async () => {
       try {
-        await publicRequest.post("/emails", { email });
-      } catch (err) {}
+        const res = await publicRequest.post("/emails", { email });
+        setMessage(res.status);
+      } catch (err) {
+        setMessage(err.response.status);
+      }
     };
     makeRequest();
   };
@@ -66,6 +76,7 @@ const Newsletter = () => {
       <Description>Get timely updates from your favorite products.</Description>
       <InputContainer>
         <Input
+          type="email"
           placeholder="Your email"
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -73,6 +84,13 @@ const Newsletter = () => {
           <Send />
         </Button>
       </InputContainer>
+      {message && (
+        <Message>
+          {message === 200
+            ? "Thank you for your subscription!"
+            : "Please enter a valid email"}
+        </Message>
+      )}
     </Container>
   );
 };
