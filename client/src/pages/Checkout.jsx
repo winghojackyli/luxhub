@@ -270,7 +270,7 @@ const Checkout = () => {
                   billingAddress
                   shippingAddress
                   description={`Your total is ${price}`}
-                  amount={price}
+                  amount={price * 100}
                   token={onToken}
                   stripeKey={KEY}
                   locale="en"
@@ -302,7 +302,7 @@ const Checkout = () => {
                     billingAddress
                     shippingAddress
                     description={`Tour total is ${bid}`}
-                    amount={bid}
+                    amount={bid * 100}
                     token={onToken}
                     stripeKey={KEY}
                     locale="en"
