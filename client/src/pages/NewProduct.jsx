@@ -328,7 +328,7 @@ const NewProduct = () => {
                         checked={checkedState[index]}
                         onClick={() => handleCheck(index)}
                       />
-                      <NewProductCheckboxLabel>
+                      <NewProductCheckboxLabel htmlFor={eachSize}>
                         {eachSize}
                       </NewProductCheckboxLabel>
                     </NewProductCheckboxContainer>
