@@ -42,7 +42,9 @@ npm install
 ```
 
 3. You will need to create .env and fill in the following variables for both backend and frontend:
+
 For backend: MONGO_URL, PASS_KEY, JWT_KEY, STRIPE_KEY
+
 For frontend: REACT_APP_STRIPE
 
 4. Start the backend and frontend concurrently:
