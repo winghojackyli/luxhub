@@ -272,7 +272,6 @@ const Product = () => {
     }
   };
 
-  console.log(bid, ask);
   return (
     <Container>
       <Announcement />
