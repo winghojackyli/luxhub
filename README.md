@@ -12,11 +12,9 @@ Check out the live demo of LuxHub: [LuxHub Demo](https://luxhub.onrender.com/)
 ## Table of Contents
 
 - [Installation](#installation)
-- [Usage](#usage)
 - [Features](#features)
 - [Screenshots](#screenshots)
-- [Contributing](#contributing)
-- [License](#license)
+
 
 ## Installation
 
@@ -26,6 +24,7 @@ You can run LuxHub locally by following these steps:
 ```
 git clone https://github.com/your-username/luxhub.git
 ```
+
 
 2. Open 2 terminals and navigate to the frontend and backend directories respectively:
 ```
@@ -41,19 +40,24 @@ cd api
 npm install
 ```
 
+
 3. You will need to create .env and fill in the following variables for both backend and frontend:
-For backend: MONGO_URL, PASS_KEY, JWT_KEY, STRIPE_KEY
-For frontend: REACT_APP_STRIPE
+
+   - For backend: MONGO_URL, PASS_KEY, JWT_KEY, STRIPE_KEY
+
+   - For frontend: REACT_APP_STRIPE
+
 
 4. Start the backend and frontend concurrently:
 ```
 npm start
 ```
 
+
 5. The application should now be accessible at http://localhost:3000.
 
 
-## Usage
+## Features
 
 LuxHub offers the following features:
 
