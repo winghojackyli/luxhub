@@ -34,7 +34,7 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //UPDATE NUM SOLD
-router.put("/:id/sold", verifyToken, async (req, res) => {
+router.put("/:id/sold", async (req, res) => {
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,

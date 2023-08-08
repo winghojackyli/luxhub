@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import styled from "styled-components";
 import ProductItem from "./ProductItem";
+import { publicRequest } from "../requestMethods";
 
 const Container = styled.div``;
 
@@ -23,9 +23,7 @@ const TopSales = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:5000/api/products/bestSellers"
-        );
+        const res = await publicRequest.get("/products/bestSellers");
         setProducts(res.data);
       } catch (err) {}
     };
