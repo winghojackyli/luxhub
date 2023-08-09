@@ -1,11 +1,12 @@
 import axios from "axios";
 
+const NODE_MODE = process.env.NODE_MODE;
 const BASE_URL =
-  process.env.NODE_MODE === "production"
+  NODE_MODE === "production"
     ? "https://luxhub-api.onrender.com/api/"
     : "http://localhost:5000/api/";
 
-console.log(process.env.NODE_MODE);
+console.log(NODE_MODE);
 
 const currentUser = JSON.parse(
   localStorage.getItem("persist:root")
