@@ -189,7 +189,6 @@ const Sell = () => {
     const makeAskRequest = async () => {
       if (currentUser) {
         if (mode === "ask") {
-          console.log("mode===ask");
           try {
             if (highestBid?.price && ask <= highestBid.price) {
               handleOpen();
@@ -201,7 +200,6 @@ const Sell = () => {
                 price: ask,
                 userId: currentUser._id,
               });
-              console.log(ask);
               navigate("/successAsk", { state: res.data });
             }
           } catch (err) {
