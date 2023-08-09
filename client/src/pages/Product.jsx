@@ -219,6 +219,13 @@ const Product = () => {
           );
           res.data ? setBid(res.data.price) : setBid("");
         } catch (err) {}
+      } else if (product.categories === "accessories") {
+        try {
+          const res = await publicRequest.get(
+            "/bids/highestbid/" + id + "/" + size
+          );
+          res.data ? setBid(res.data.price) : setBid("");
+        } catch (err) {}
       }
     };
     getBid();
@@ -232,6 +239,13 @@ const Product = () => {
             "/asks/lowestask/" + id + "/" + size
           );
           res.data ? setAsk(res.data.price) : setAsk("");
+        } catch (err) {}
+      } else if (product.categories === "accessories") {
+        try {
+          const res = await publicRequest.get(
+            "/bids/highestbid/" + id + "/" + size
+          );
+          res.data ? setBid(res.data.price) : setBid("");
         } catch (err) {}
       }
     };

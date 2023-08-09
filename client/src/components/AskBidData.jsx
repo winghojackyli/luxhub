@@ -53,7 +53,7 @@ const AskBidData = ({ type }) => {
 
   const rows = tableData.map((item) => ({
     price: `$${item._id.price}`,
-    size: `US ${item._id.size}`,
+    size: `${item._id.size || "-"}`,
     quantity: item.quantity,
   }));
 
