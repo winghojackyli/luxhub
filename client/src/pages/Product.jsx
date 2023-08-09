@@ -185,6 +185,7 @@ const Product = () => {
         );
 
         const resTrend = await userRequest.get(`/orders/${id}/trend`);
+        console.log(resTrend, id);
         resTrend.data.map((item) =>
           setPriceStats((prev) => [
             ...prev,
@@ -221,15 +222,13 @@ const Product = () => {
         } catch (err) {}
       } else if (product.categories === "accessories") {
         try {
-          const res = await publicRequest.get(
-            "/bids/highestbid/" + id + "/" + size
-          );
+          const res = await publicRequest.get("/bids/highestbid/" + id);
           res.data ? setBid(res.data.price) : setBid("");
         } catch (err) {}
       }
     };
     getBid();
-  }, [id, size]);
+  }, [id, size, product]);
 
   useEffect(() => {
     const getAsk = async () => {
@@ -242,15 +241,13 @@ const Product = () => {
         } catch (err) {}
       } else if (product.categories === "accessories") {
         try {
-          const res = await publicRequest.get(
-            "/bids/highestbid/" + id + "/" + size
-          );
-          res.data ? setBid(res.data.price) : setBid("");
+          const res = await publicRequest.get("/asks/lowestask/" + id);
+          res.data ? setAsk(res.data.price) : setAsk("");
         } catch (err) {}
       }
     };
     getAsk();
-  }, [id, size]);
+  }, [id, size, product]);
 
   useEffect(() => {
     const getLatestSalesPrice = async () => {

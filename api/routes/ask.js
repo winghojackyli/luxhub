@@ -91,4 +91,17 @@ router.get("/lowestAsk/:productId/:size", async (req, res) => {
   }
 });
 
+router.get("/lowestAsk/:productId", async (req, res) => {
+  try {
+    const asks = await Ask.findOne({
+      productId: req.params.productId,
+    })
+      .sort({ price: 1 })
+      .limit(1);
+    res.status(200).json(asks);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;

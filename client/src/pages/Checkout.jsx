@@ -157,20 +157,14 @@ const Checkout = () => {
     setStripeToken(token);
   };
 
-  const handleClick = () => {
-    if (lowestAsk && bid >= lowestAsk.price) {
-      handleOpen();
-    }
-  };
-
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        if (lowestAsk && bid >= lowestAsk.price) {
+        if (lowestAsk.price && bid >= lowestAsk.price) {
           const res = await userRequest.post("/orders", {
             productId: id,
             productName: product.title,
-            size,
+            size: product.categories === "accessories" ? "" : size,
             price: lowestAsk.price,
             seller: lowestAsk.userId,
             buyer: currentUser._id,
@@ -213,12 +207,17 @@ const Checkout = () => {
           const res = await publicRequest.get(
             "/bids/highestBid/" + id + "/" + size
           );
-          res.data ? setHighestBid(res.data.price) : setHighestBid("");
+          res.data ? setHighestBid(res.data) : setHighestBid("");
+        } catch (err) {}
+      } else if (product.categories === "accessories") {
+        try {
+          const res = await publicRequest.get("/bids/highestBid/" + id);
+          res.data ? setHighestBid(res.data) : setHighestBid("");
         } catch (err) {}
       }
     };
     getHighestBid();
-  }, [id, size]);
+  }, [id, size, product]);
 
   useEffect(() => {
     const getLowestAsk = async () => {
@@ -229,10 +228,15 @@ const Checkout = () => {
           );
           setLowestAsk(res.data);
         } catch (err) {}
+      } else if (product.categories === "accessories") {
+        try {
+          const res = await publicRequest.get("/asks/lowestAsk/" + id);
+          res.data ? setLowestAsk(res.data) : setLowestAsk("");
+        } catch (err) {}
       }
     };
     getLowestAsk();
-  }, [id, size]);
+  }, [id, size, product]);
 
   return (
     <Container>
@@ -308,9 +312,10 @@ const Checkout = () => {
               </>
             ) : (
               <BidWrapper>
-                {highestBid ? (
+                {highestBid.price ? (
                   <Limit>
-                    Enter ${highestBid} or more to get your Bid matched faster!
+                    Enter ${highestBid.price} or more to get your Bid matched
+                    faster!
                   </Limit>
                 ) : (
                   <Limit>Place the first bid now!</Limit>
@@ -348,6 +353,7 @@ const Checkout = () => {
                       type={"Bid"}
                       productId={id}
                       size={size}
+                      product={product}
                     />
                   </>
                 ) : currentUser ? (

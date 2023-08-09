@@ -154,12 +154,17 @@ const Sell = () => {
           const res = await publicRequest.get(
             "/asks/lowestAsk/" + id + "/" + size
           );
-          res.data ? setLowestAsk(res.data.price) : setLowestAsk("");
+          res.data ? setLowestAsk(res.data) : setLowestAsk("");
+        } catch (err) {}
+      } else if (product.categories === "accessories") {
+        try {
+          const res = await publicRequest.get("/asks/lowestAsk/" + id);
+          res.data ? setLowestAsk(res.data) : setLowestAsk("");
         } catch (err) {}
       }
     };
     getLowestAsk();
-  }, [id, size]);
+  }, [id, size, product]);
 
   useEffect(() => {
     const getHighestBid = async () => {
@@ -170,28 +175,48 @@ const Sell = () => {
           );
           setHighestBid(res.data);
         } catch (err) {}
+      } else if (product.categories === "accessories") {
+        try {
+          const res = await publicRequest.get("/bids/highestBid/" + id);
+          res.data ? setHighestBid(res.data) : setHighestBid("");
+        } catch (err) {}
       }
     };
     getHighestBid();
-  }, [id, size]);
+  }, [id, size, product]);
 
   const handleClick = () => {
     const makeAskRequest = async () => {
       if (currentUser) {
-        try {
-          if (highestBid && ask <= highestBid.price) {
-            handleOpen();
-          } else {
-            const res = await userRequest.post("/asks", {
+        if (mode === "ask") {
+          try {
+            if (highestBid.price && ask <= highestBid.price) {
+              handleOpen();
+            } else {
+              const res = await userRequest.post("/asks", {
+                productId: id,
+                productName: product.title,
+                size: product.categories === "accessories" ? "" : size,
+                price: ask,
+                userId: currentUser._id,
+              });
+              navigate("/successAsk", { state: res.data });
+            }
+          } catch (err) {}
+        } else {
+          try {
+            const res = await userRequest.post("/orders", {
               productId: id,
               productName: product.title,
-              size,
-              price: mode === "sell" ? price : ask,
-              userId: currentUser._id,
+              size: product.categories === "accessories" ? "" : size,
+              price,
+              seller: currentUser._id,
+              buyer: highestBid.userId,
             });
-            navigate("/successAsk", { state: res.data });
-          }
-        } catch (err) {}
+            await userRequest.delete("/bids/" + highestBid._id);
+            navigate("/successOrder", { state: res.data });
+          } catch (err) {}
+        }
       } else {
         alert("Please Login to proceed");
         navigate("/login");
@@ -248,8 +273,8 @@ const Sell = () => {
               </>
             ) : (
               <BidWrapper>
-                {lowestAsk ? (
-                  <Limit>Enter ${lowestAsk} or earn more!</Limit>
+                {lowestAsk.price ? (
+                  <Limit>Enter ${lowestAsk.price} or earn more!</Limit>
                 ) : (
                   <Limit>Place the first ask here!</Limit>
                 )}
@@ -271,6 +296,7 @@ const Sell = () => {
                   type={"Ask"}
                   productId={id}
                   size={size}
+                  product={product}
                 />
               </BidWrapper>
             )}

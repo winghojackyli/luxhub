@@ -100,4 +100,16 @@ router.get("/highestBid/:productId/:size", async (req, res) => {
   }
 });
 
+router.get("/highestBid/:productId", async (req, res) => {
+  try {
+    const bids = await Bid.findOne({
+      productId: req.params.productId,
+    })
+      .sort({ price: -1 })
+      .limit(1);
+    res.status(200).json(bids);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 module.exports = router;
