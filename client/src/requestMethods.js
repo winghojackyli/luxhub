@@ -6,8 +6,6 @@ const BASE_URL =
     ? "https://luxhub-api.onrender.com/api/"
     : "http://localhost:5000/api/";
 
-console.log(NODE_MODE);
-
 const currentUser = JSON.parse(
   localStorage.getItem("persist:root")
 )?.currentUser;
