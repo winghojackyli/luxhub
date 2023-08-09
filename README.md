@@ -11,9 +11,16 @@ Check out the live demo of LuxHub: [LuxHub Demo](https://luxhub.onrender.com/)
 
 ## Table of Contents
 
+- [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Features](#features)
 - [Screenshots](#screenshots)
+
+
+## Prerequisites
+- [MongoDB](https://gist.github.com/nrollr/9f523ae17ecdbb50311980503409aeb3)
+- [Node](https://nodejs.org/en/download/) ^16.17.0
+- [npm](https://nodejs.org/en/download/package-manager/)
 
 
 ## Installation
