@@ -1,6 +1,12 @@
 import axios from "axios";
 
-const BASE_URL = "https://luxhub-api.onrender.com/api/";
+const getBaseUrl = () => {
+  if (process.env.NODE_MODE === "production") {
+    return "https://luxhub-api.onrender.com/api/";
+  } else {
+    return "http://localhost:5000/api/";
+  }
+};
 
 const currentUser = JSON.parse(
   localStorage.getItem("persist:root")
@@ -16,10 +22,10 @@ const getToken = () => {
 };
 
 export const publicRequest = axios.create({
-  baseURL: BASE_URL,
+  baseURL: getBaseUrl(),
 });
 
 export const userRequest = axios.create({
-  baseURL: BASE_URL,
+  baseURL: getBaseUrl(),
   headers: { token: getToken() || TOKEN },
 });
