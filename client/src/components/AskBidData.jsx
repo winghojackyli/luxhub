@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 import { Stack } from "@mui/material";
+import { publicRequest } from "../requestMethods";
 
 const AskBidData = ({ type }) => {
   const [tableData, setTableData] = useState([]);
@@ -15,9 +15,9 @@ const AskBidData = ({ type }) => {
       try {
         let res;
         if (type === "Ask") {
-          res = await axios.get(`http://localhost:5000/api/asks/find/${id}`);
+          res = await publicRequest.get(`/asks/find/${id}`);
         } else if (type === "Bid") {
-          res = await axios.get(`http://localhost:5000/api/bids/find/${id}`);
+          res = await publicRequest.get(`/bids/find/${id}`);
         }
         setTableData(res.data);
       } catch (err) {

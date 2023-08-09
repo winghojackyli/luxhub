@@ -36,7 +36,6 @@ const EditModal = ({ open, handleClose, type, reRender, itemId }) => {
     const editAskBid = async () => {
       try {
         if (type === "Ask") {
-          console.log(typeof newPrice);
           await userRequest.put(`/asks/${itemId}`, { newPrice });
           const res = await userRequest.get(`/asks/findUserAsks/${user._id}`);
           reRender(res.data);
@@ -75,7 +74,7 @@ const EditModal = ({ open, handleClose, type, reRender, itemId }) => {
                 billingAddress
                 shippingAddress
                 description={`Tour total is ${newPrice}`}
-                amount={newPrice}
+                amount={newPrice * 100}
                 token={onToken}
                 stripeKey={KEY}
                 locale="en"

@@ -6,6 +6,7 @@ import StripeCheckout from "react-stripe-checkout";
 import { publicRequest, userRequest } from "../requestMethods";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import ConfirmModal from "../components/ConfirmModal";
 
 const KEY = process.env.REACT_APP_STRIPE;
 
@@ -129,6 +130,13 @@ const Checkout = () => {
   const currentUser = useSelector((state) => state.currentUser);
   const navigate = useNavigate();
 
+  // Modal related
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => setOpen(false);
+
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -147,6 +155,12 @@ const Checkout = () => {
 
   const onToken = (token) => {
     setStripeToken(token);
+  };
+
+  const handleClick = () => {
+    if (lowestAsk && bid >= lowestAsk.price) {
+      handleOpen();
+    }
   };
 
   useEffect(() => {
@@ -258,25 +272,39 @@ const Checkout = () => {
               </Button>
             </ButtonContainer>
 
+            {/* {currentUser ? ( */}
             {mode === "buy" ? (
               <>
                 <SummaryItem type="total">
                   <SummaryItemText>Total</SummaryItemText>
                   <SummaryItemPrice>$ {price}</SummaryItemPrice>
                 </SummaryItem>
-                <StripeCheckout
-                  name="LuxHub"
-                  image="https://i.ibb.co/rpPZJH6/logo.png"
-                  billingAddress
-                  shippingAddress
-                  description={`Your total is ${price}`}
-                  amount={price}
-                  token={onToken}
-                  stripeKey={KEY}
-                  locale="en"
-                >
-                  <CheckoutButton>CHECKOUT NOW</CheckoutButton>
-                </StripeCheckout>
+
+                {currentUser ? (
+                  <StripeCheckout
+                    name="LuxHub"
+                    image="https://i.ibb.co/rpPZJH6/logo.png"
+                    billingAddress
+                    shippingAddress
+                    description={`Your total is ${price}`}
+                    amount={price * 100}
+                    token={onToken}
+                    stripeKey={KEY}
+                    locale="en"
+                  >
+                    <CheckoutButton>CHECKOUT NOW</CheckoutButton>
+                  </StripeCheckout>
+                ) : (
+                  <CheckoutButton
+                    disabled={!bid}
+                    onClick={() => {
+                      alert("Please Login to proceed");
+                      navigate("/login");
+                    }}
+                  >
+                    PLACE BID
+                  </CheckoutButton>
+                )}
               </>
             ) : (
               <BidWrapper>
@@ -295,14 +323,41 @@ const Checkout = () => {
                 />
                 <Limit>A minimum bid value of $100 is required</Limit>
 
-                {currentUser ? (
+                {lowestAsk && bid >= lowestAsk.price ? (
+                  <>
+                    {currentUser ? (
+                      <CheckoutButton disabled={!bid} onClick={handleOpen}>
+                        PLACE BID
+                      </CheckoutButton>
+                    ) : (
+                      <CheckoutButton
+                        disabled={!bid}
+                        onClick={() => {
+                          alert("Please Login to proceed");
+                          navigate("/login");
+                        }}
+                      >
+                        PLACE BID
+                      </CheckoutButton>
+                    )}
+                    <ConfirmModal
+                      open={open}
+                      handleClose={handleClose}
+                      bestPrice={price}
+                      bestBidAsk={lowestAsk}
+                      type={"Bid"}
+                      productId={id}
+                      size={size}
+                    />
+                  </>
+                ) : currentUser ? (
                   <StripeCheckout
                     name="LuxHub"
                     image="https://i.ibb.co/rpPZJH6/logo.png"
                     billingAddress
                     shippingAddress
                     description={`Tour total is ${bid}`}
-                    amount={bid}
+                    amount={bid * 100}
                     token={onToken}
                     stripeKey={KEY}
                     locale="en"
@@ -322,6 +377,18 @@ const Checkout = () => {
                 )}
               </BidWrapper>
             )}
+
+            {/* // ) : (
+            //   <CheckoutButton
+            //     disabled={!bid}
+            //     onClick={() => {
+            //       alert("Please Login to proceed");
+            //       navigate("/login");
+            //     }}
+            //   >
+            //     PLACE BID
+            //   </CheckoutButton>
+            // )} */}
           </Summary>
         </Bottom>
       </Wrapper>
