@@ -189,8 +189,9 @@ const Sell = () => {
     const makeAskRequest = async () => {
       if (currentUser) {
         if (mode === "ask") {
+          console.log("mode===ask");
           try {
-            if (highestBid.price && ask <= highestBid.price) {
+            if (highestBid?.price && ask <= highestBid.price) {
               handleOpen();
             } else {
               const res = await userRequest.post("/asks", {
@@ -200,9 +201,12 @@ const Sell = () => {
                 price: ask,
                 userId: currentUser._id,
               });
+              console.log(ask);
               navigate("/successAsk", { state: res.data });
             }
-          } catch (err) {}
+          } catch (err) {
+            console.log(err);
+          }
         } else {
           try {
             const res = await userRequest.post("/orders", {
@@ -273,8 +277,8 @@ const Sell = () => {
               </>
             ) : (
               <BidWrapper>
-                {lowestAsk.price ? (
-                  <Limit>Enter ${lowestAsk.price} or earn more!</Limit>
+                {lowestAsk?.price ? (
+                  <Limit>Enter ${lowestAsk?.price} or earn more!</Limit>
                 ) : (
                   <Limit>Place the first ask here!</Limit>
                 )}

@@ -185,7 +185,6 @@ const Product = () => {
         );
 
         const resTrend = await userRequest.get(`/orders/${id}/trend`);
-        console.log(resTrend, id);
         resTrend.data.map((item) =>
           setPriceStats((prev) => [
             ...prev,

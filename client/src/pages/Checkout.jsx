@@ -160,7 +160,7 @@ const Checkout = () => {
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        if (lowestAsk.price && bid >= lowestAsk.price) {
+        if (lowestAsk?.price && bid >= lowestAsk.price) {
           const res = await userRequest.post("/orders", {
             productId: id,
             productName: product.title,
@@ -312,9 +312,9 @@ const Checkout = () => {
               </>
             ) : (
               <BidWrapper>
-                {highestBid.price ? (
+                {highestBid?.price ? (
                   <Limit>
-                    Enter ${highestBid.price} or more to get your Bid matched
+                    Enter ${highestBid?.price} or more to get your Bid matched
                     faster!
                   </Limit>
                 ) : (
@@ -328,7 +328,7 @@ const Checkout = () => {
                 />
                 <Limit>A minimum bid value of $100 is required</Limit>
 
-                {lowestAsk && bid >= lowestAsk.price ? (
+                {lowestAsk?.price && bid >= lowestAsk.price ? (
                   <>
                     {currentUser ? (
                       <CheckoutButton disabled={!bid} onClick={handleOpen}>
