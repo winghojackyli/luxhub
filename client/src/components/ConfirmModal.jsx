@@ -9,6 +9,7 @@ const KEY = process.env.REACT_APP_STRIPE;
 
 export default function ConfirmModal({
   type,
+  product,
   handleClose,
   open,
   bestPrice,
@@ -30,7 +31,7 @@ export default function ConfirmModal({
         const res = await userRequest.post("/orders", {
           productId,
           productName: bestBidAsk.productName,
-          size,
+          size: product.categories === "accessories" ? "" : size,
           price: bestPrice,
           seller: bestBidAsk.userId,
           buyer: currentUser._id,
@@ -41,7 +42,9 @@ export default function ConfirmModal({
           amount: bestBidAsk.price,
         });
         navigate("/successOrder", { state: res.data });
-      } catch (err) {}
+      } catch (err) {
+        console.log(err);
+      }
     };
     stripeToken && makeRequest();
   }, [stripeToken]);
@@ -50,7 +53,7 @@ export default function ConfirmModal({
     try {
       const res = await userRequest.post("/orders", {
         productId,
-        size,
+        size: product.categories === "accessories" ? "" : size,
         productName: bestBidAsk.productName,
         price: bestBidAsk.price,
         seller: currentUser._id,
@@ -62,7 +65,6 @@ export default function ConfirmModal({
       console.log(err);
     }
   };
-
   return (
     <div>
       <Modal open={open} onClose={handleClose}>

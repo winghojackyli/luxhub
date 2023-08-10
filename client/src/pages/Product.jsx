@@ -215,28 +215,38 @@ const Product = () => {
       if (size) {
         try {
           const res = await publicRequest.get(
-            "/bids/highestbid/" + id + "/" + size
+            "/bids/highestBid/" + id + "/" + size
           );
+          res.data ? setBid(res.data.price) : setBid("");
+        } catch (err) {}
+      } else if (product.categories === "accessories") {
+        try {
+          const res = await publicRequest.get("/bids/highestBid/" + id);
           res.data ? setBid(res.data.price) : setBid("");
         } catch (err) {}
       }
     };
     getBid();
-  }, [id, size]);
+  }, [id, size, product]);
 
   useEffect(() => {
     const getAsk = async () => {
       if (size) {
         try {
           const res = await publicRequest.get(
-            "/asks/lowestask/" + id + "/" + size
+            "/asks/lowestAsk/" + id + "/" + size
           );
+          res.data ? setAsk(res.data.price) : setAsk("");
+        } catch (err) {}
+      } else if (product.categories === "accessories") {
+        try {
+          const res = await publicRequest.get("/asks/lowestAsk/" + id);
           res.data ? setAsk(res.data.price) : setAsk("");
         } catch (err) {}
       }
     };
     getAsk();
-  }, [id, size]);
+  }, [id, size, product]);
 
   useEffect(() => {
     const getLatestSalesPrice = async () => {

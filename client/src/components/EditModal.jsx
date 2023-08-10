@@ -51,7 +51,11 @@ const EditModal = ({ open, handleClose, type, reRender, itemId }) => {
 
   return (
     <div>
-      <Modal open={open} onClose={handleClose}>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        BackdropProps={{ style: { backgroundColor: "rgba(0,0,0,0.1)" } }}
+      >
         <Box sx={style.modalWrapper}>
           <Typography sx={{ fontFamily: "Urbanist" }}>
             Please enter the new {type} price:

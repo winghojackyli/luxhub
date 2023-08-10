@@ -29,7 +29,11 @@ const DeleteModal = ({ itemId, open, handleClose, type, reRender }) => {
 
   return (
     <div>
-      <Modal open={open} onClose={handleClose}>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        BackdropProps={{ style: { backgroundColor: "rgba(0,0,0,0.1)" } }}
+      >
         <Box sx={style.modalWrapper}>
           <Typography sx={{ fontFamily: "Urbanist" }}>
             Are you sure you want to delete this {type}?
