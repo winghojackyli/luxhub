@@ -26,6 +26,7 @@ import Profile from "./pages/Profile";
 
 const App = () => {
   const user = useSelector((state) => state.currentUser);
+
   return (
     <Router>
       <ScrollToTop />

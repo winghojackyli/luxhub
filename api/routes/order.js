@@ -74,7 +74,7 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //GET PRODUCT SALES STATS
-router.get("/:productId/sales", verifyToken, async (req, res) => {
+router.get("/:productId/sales", async (req, res) => {
   const date = new Date();
   const lastYear = new Date(date.setFullYear(date.getFullYear - 1));
 
@@ -108,7 +108,7 @@ router.get("/:productId/sales", verifyToken, async (req, res) => {
 });
 
 //GET PRICE TREND
-router.get("/:productId/trend", verifyToken, async (req, res) => {
+router.get("/:productId/trend", async (req, res) => {
   try {
     const data = await Order.aggregate([
       {

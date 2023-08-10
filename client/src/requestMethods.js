@@ -6,13 +6,7 @@ const BASE_URL =
     ? "https://luxhub-api.onrender.com/api/"
     : "http://localhost:5000/api/";
 
-const currentUser = JSON.parse(
-  localStorage.getItem("persist:root")
-)?.currentUser;
-
-const TOKEN = currentUser && JSON.parse(currentUser)?.accessToken;
-
-const getToken = () => {
+export const getToken = () => {
   const currentUser = JSON.parse(
     localStorage.getItem("persist:root")
   )?.currentUser;
@@ -25,5 +19,5 @@ export const publicRequest = axios.create({
 
 export const userRequest = axios.create({
   baseURL: BASE_URL,
-  headers: { token: getToken() || TOKEN },
+  headers: { token: getToken() },
 });
