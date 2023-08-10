@@ -72,8 +72,8 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    login(dispatch, { username, password });
-    navigate(0);
+    const success = login(dispatch, { username, password });
+    success && navigate(0);
   };
   return (
     <Container>
