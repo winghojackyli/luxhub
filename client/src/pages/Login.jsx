@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { mobile } from "../responsive";
 import { login } from "../redux/apiCalls";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   width: 100vw;
@@ -66,14 +66,12 @@ const Error = styled.span`
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isFetching, error } = useSelector((state) => state);
 
   const handleLogin = (e) => {
     e.preventDefault();
-    const success = login(dispatch, { username, password });
-    success && navigate(0);
+    login(dispatch, { username, password });
   };
   return (
     <Container>
