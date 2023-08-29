@@ -3,7 +3,7 @@ import axios from "axios";
 const NODE_MODE = process.env.REACT_APP_NODE_MODE;
 const BASE_URL =
   NODE_MODE === "production"
-    ? "https://luxhub-api.onrender.com/api/"
+    ? `${process.env.REACT_APP_API_URL}/api/`
     : "http://localhost:5000/api/";
 
 export const getToken = () => {
