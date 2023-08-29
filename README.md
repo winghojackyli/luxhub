@@ -7,7 +7,7 @@ LuxHub is a MERN web application designed for buying and selling sneakers, appar
 
 ## Demo
 
-Check out the live demo of LuxHub: [LuxHub Demo](https://luxhub.onrender.com/)
+Check out the live demo of LuxHub: [LuxHub Demo](https://luxhub.vercel.app)
 
 ## Table of Contents
 
