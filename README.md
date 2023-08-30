@@ -4,6 +4,10 @@ This is a course project created by @winghojackyli and @veronicacheng2 in Summer
 
 LuxHub is a MERN web application designed for buying and selling sneakers, apparel, accessories, and more. It provides a platform for users to place bids and asks for various products and keep track of their prices. Whether you're a sneaker enthusiast or a fashion aficionado, LuxHub offers a seamless experience for trading luxury items.
 
+## Screenshot
+
+![luxhub vercel app_](https://github.com/winghojackyli/luxhub/assets/108389005/8ba53eae-fd94-4aaf-977b-5c52a60a36b2)
+
 
 ## Demo
 
