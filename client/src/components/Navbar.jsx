@@ -84,7 +84,11 @@ const Navbar = ({ user }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {
-    logout(dispatch);
+    if (window.confirm("Are you sure to sign out?")) {
+      logout(dispatch);
+    } else {
+      return false;
+    }
   };
 
   const goToSearch = (e) => {
