@@ -22,7 +22,7 @@ const Title = styled.h1`
   font-size: 25px;
 `;
 
-const UserBid = () => {
+const UserOrder = () => {
   const user = useSelector((state) => state.currentUser);
   const [buyOrders, setBuyOrders] = useState([]);
   const [sellOrders, setSellOrders] = useState([]);
@@ -120,4 +120,4 @@ const UserBid = () => {
   );
 };
 
-export default UserBid;
+export default UserOrder;
