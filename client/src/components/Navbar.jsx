@@ -83,11 +83,12 @@ const MenuItem = styled.div`
 const Navbar = ({ user }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleLogout = () => {
+  const handleLogout = (e) => {
     if (window.confirm("Are you sure to sign out?")) {
       logout(dispatch);
     } else {
-      return false;
+      e.preventDefault();
+      e.stopPropagation();
     }
   };
 
