@@ -4,7 +4,7 @@ const NODE_MODE = process.env.REACT_APP_NODE_MODE;
 const BASE_URL =
   NODE_MODE === "production"
     ? `${process.env.REACT_APP_API_URL}/api/`
-    : "http://localhost:5000/api/";
+    : `http://localhost:${process.env.REACT_APP_PORT || 5000}/api/`;
 
 export const getToken = () => {
   const currentUser = JSON.parse(

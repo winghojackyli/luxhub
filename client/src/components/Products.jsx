@@ -6,9 +6,8 @@ import { publicRequest } from "../requestMethods";
 
 const Container = styled.div`
   padding: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 `;
 
 const SearchResult = styled.h4`
