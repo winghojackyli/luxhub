@@ -270,9 +270,10 @@ const Product = () => {
     e.preventDefault();
     const deleteProduct = async () => {
       try {
-        await userRequest
-          .delete(`/products/${id}`)
-          .then(() => navigate("/products"));
+        await userRequest.delete(`/products/${id}`).then(() => {
+          alert("Product has been deleted!");
+          navigate("/products");
+        });
       } catch (err) {}
     };
     if (window.confirm("Please confirm deletion of product")) {
