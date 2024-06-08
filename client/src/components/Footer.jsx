@@ -11,6 +11,7 @@ import React from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { Link } from "react-router-dom";
+import PaymentImage from "../assets/payment.png";
 
 const Container = styled.div`
   display: flex;
@@ -132,7 +133,7 @@ const Footer = () => {
           <MailOutline style={{ marginRight: "10px" }} />
           luxhubcanada@gmail.com
         </ContactItem>
-        <Payment src="https://i.ibb.co/Qfvn4z6/payment.png" />
+        <Payment src={PaymentImage} />
       </Right>
     </Container>
   );
