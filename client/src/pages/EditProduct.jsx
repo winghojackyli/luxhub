@@ -263,9 +263,10 @@ const EditProduct = () => {
 
   const updateProduct = async (product) => {
     try {
-      await userRequest
-        .put(`/products/${productId}`, product)
-        .then(() => navigate(`/product/${productId}`));
+      await userRequest.put(`/products/${productId}`, product).then(() => {
+        alert("Product has been updated!");
+        navigate(`/product/${productId}`);
+      });
     } catch (err) {}
   };
 

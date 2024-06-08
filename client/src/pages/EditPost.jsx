@@ -87,9 +87,10 @@ const EditPost = () => {
 
   const updatePost = async (updatedPost) => {
     try {
-      await userRequest
-        .put(`/posts/${post.id}`, updatedPost)
-        .then(() => navigate("/posts"));
+      await userRequest.put(`/posts/${post.id}`, updatedPost).then(() => {
+        alert("Post has been updated!");
+        navigate("/posts");
+      });
     } catch (err) {}
   };
 

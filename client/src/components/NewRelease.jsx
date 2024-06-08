@@ -7,9 +7,8 @@ const Container = styled.div``;
 
 const ProductContainer = styled.div`
   padding: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 `;
 const Title = styled.h2`
   padding: 0px 30px;
