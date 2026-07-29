@@ -127,7 +127,7 @@ const EditPost = () => {
             .includes(products[index]._id))
       )
     );
-  }, [products]);
+  }, [products, post.products]);
 
   const handleClick = (e) => {
     e.preventDefault();
