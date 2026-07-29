@@ -92,7 +92,7 @@ const UserInfo = () => {
 
   useEffect(() => {
     if (location.pathname.split("/")[1] !== user._id) navigate(`/${user._id}`);
-  }, [location.pathname]);
+  }, [location.pathname, navigate, user._id]);
 
   const handleChange = (e) => {
     setUserInfo((prev) => {

@@ -100,35 +100,35 @@ const NewProductButton = styled.button`
   cursor: pointer;
 `;
 
+const SHOE_SIZES = [
+  "4",
+  "4.5",
+  "5",
+  "5.5",
+  "6",
+  "6.5",
+  "7",
+  "7.5",
+  "8",
+  "8.5",
+  "9",
+  "9.5",
+  "10",
+  "10.5",
+  "11",
+  "11.5",
+  "12",
+  "12.5",
+  "13",
+  "14",
+];
+const APPAREL_SIZES = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+
 const NewProduct = () => {
   const [inputs, setInputs] = useState({ categories: "top" });
   const [file, setFile] = useState(null);
   const [arrays, setArrays] = useState({});
   const navigate = useNavigate();
-
-  const SHOE_SIZES = [
-    "4",
-    "4.5",
-    "5",
-    "5.5",
-    "6",
-    "6.5",
-    "7",
-    "7.5",
-    "8",
-    "8.5",
-    "9",
-    "9.5",
-    "10",
-    "10.5",
-    "11",
-    "11.5",
-    "12",
-    "12.5",
-    "13",
-    "14",
-  ];
-  const APPAREL_SIZES = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
   const [checkedState, setCheckedState] = useState([]);
 

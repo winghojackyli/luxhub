@@ -47,7 +47,19 @@ export default function ConfirmModal({
       }
     };
     stripeToken && makeRequest();
-  }, [stripeToken]);
+  }, [
+    stripeToken,
+    bestBidAsk._id,
+    bestBidAsk.price,
+    bestBidAsk.productName,
+    bestBidAsk.userId,
+    bestPrice,
+    currentUser._id,
+    navigate,
+    product.categories,
+    productId,
+    size,
+  ]);
 
   const confirmOrder = async () => {
     try {
