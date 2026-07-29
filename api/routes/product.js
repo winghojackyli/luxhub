@@ -64,21 +64,24 @@ router.get("/find", async (req, res) => {
   const qSearch = req.query.search;
 
   try {
-    if (qSearch) {
+    if (qSearch && typeof qSearch === "string") {
+      const escapedSearch = qSearch.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       const products = await Product.find({
         $or: [
           {
             title: {
-              $regex: qSearch,
+              $regex: escapedSearch,
               $options: "i",
             },
           },
           {
-            brand: { $regex: qSearch, $options: "i" },
+            brand: { $regex: escapedSearch, $options: "i" },
           },
         ],
       }).sort({ createdAt: -1 });
       res.status(200).json(products);
+    } else if (qSearch) {
+      res.status(400).json("Invalid search query");
     }
   } catch (err) {
     res.status(500).json(err);
